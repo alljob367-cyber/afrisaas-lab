@@ -52,3 +52,24 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# Screenshots and test files (dev artifacts)
+*.png
+!public/images/*.png
+
+# Tool results and temp files
+tool-results/
+.zscripts/
+agent-ctx/
+
+# Database files
+db/*.db
+db/*.db-journal
+*.db
+*.db-journal
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
