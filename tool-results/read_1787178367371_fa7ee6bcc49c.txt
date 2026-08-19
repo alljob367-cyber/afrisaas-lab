@@ -1,0 +1,1048 @@
+     1→"use client";
+     2→
+     3→import { useState, useRef } from "react";
+     4→import Image from "next/image";
+     5→import { motion, useInView, AnimatePresence } from "framer-motion";
+     6→import Navbar from "@/components/sections/Navbar";
+     7→import Footer from "@/components/sections/Footer";
+     8→import MvpCard from "@/components/sections/MvpCard";
+     9→import {
+    10→  heroData,
+    11→  sectors,
+    12→  popularMvps,
+    13→  whyChooseUs,
+    14→  howItWorks,
+    15→  aiLabFeatures,
+    16→  testimonials,
+    17→  finalCta,
+    18→} from "@/data/portfolio";
+    19→
+    20→// ═══════════════════════════════════════════════════════════════
+    21→// Animation helpers
+    22→// ═══════════════════════════════════════════════════════════════
+    23→const fadeUp = {
+    24→  hidden: { opacity: 0, y: 30 },
+    25→  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
+    26→};
+    27→
+    28→const staggerContainer = {
+    29→  hidden: {},
+    30→  visible: { transition: { staggerChildren: 0.1 } },
+    31→};
+    32→
+    33→const scaleUp = {
+    34→  hidden: { opacity: 0, scale: 0.95 },
+    35→  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" as const } },
+    36→};
+    37→
+    38→// ═══════════════════════════════════════════════════════════════
+    39→// Section Wrapper
+    40→// ═══════════════════════════════════════════════════════════════
+    41→function Section({
+    42→  children,
+    43→  id,
+    44→  className = "",
+    45→  style = {},
+    46→}: {
+    47→  children: React.ReactNode;
+    48→  id?: string;
+    49→  className?: string;
+    50→  style?: React.CSSProperties;
+    51→}) {
+    52→  const ref = useRef(null);
+    53→  const isInView = useInView(ref, { once: true, margin: "-60px" });
+    54→
+    55→  return (
+    56→    <section
+    57→      ref={ref}
+    58→      id={id}
+    59→      className={`py-20 md:py-28 ${className}`}
+    60→      style={style}
+    61→    >
+    62→      <motion.div
+    63→        initial="hidden"
+    64→        animate={isInView ? "visible" : "hidden"}
+    65→        variants={staggerContainer}
+    66→        style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(1rem, 4vw, 2rem)" }}
+    67→      >
+    68→        {children}
+    69→      </motion.div>
+    70→    </section>
+    71→  );
+    72→}
+    73→
+    74→// ═══════════════════════════════════════════════════════════════
+    75→// Section Divider
+    76→// ═══════════════════════════════════════════════════════════════
+    77→function SectionDivider({ title }: { title: string }) {
+    78→  return (
+    79→    <div className="flex items-center justify-center gap-4 mb-10 mt-2">
+    80→      <div
+    81→        className="h-px flex-1 max-w-[120px]"
+    82→        style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.4))" }}
+    83→      />
+    84→      <span className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#D4AF37" }}>
+    85→        {title}
+    86→      </span>
+    87→      <div
+    88→        className="h-px flex-1 max-w-[120px]"
+    89→        style={{ background: "linear-gradient(90deg, rgba(212,175,55,0.4), transparent)" }}
+    90→      />
+    91→    </div>
+    92→  );
+    93→}
+    94→
+    95→// ═══════════════════════════════════════════════════════════════
+    96→// MAIN PAGE
+    97→// ═══════════════════════════════════════════════════════════════
+    98→export default function HomePage() {
+    99→  const [searchQuery, setSearchQuery] = useState("");
+   100→  const [testimonialIndex, setTestimonialIndex] = useState(0);
+   101→
+   102→  return (
+   103→    <main className="min-h-screen" style={{ background: "#0a0a0a" }}>
+   104→      <Navbar />
+   105→
+   106→      {/* ═══════════════════════════════════════════════════════════
+   107→          HERO SECTION
+   108→          ═══════════════════════════════════════════════════════════ */}
+   109→      <section
+   110→        className="relative pt-20 pb-12 md:pt-36 md:pb-24 overflow-hidden section-transition"
+   111→        style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #0d0d08 30%, #0a100d 60%, #0a0a0a 100%)" }}
+   112→      >
+   113→        {/* Background gold circles */}
+   114→        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+   115→          <div
+   116→            className="absolute rounded-full animate-float-slow hidden sm:block"
+   117→            style={{
+   118→              width: 500,
+   119→              height: 500,
+   120→              top: -100,
+   121→              right: -100,
+   122→              background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, rgba(255,107,53,0.04) 40%, transparent 70%)",
+   123→            }}
+   124→          />
+   125→          <div
+   126→            className="absolute rounded-full animate-float-delayed"
+   127→            style={{
+   128→              width: 300,
+   129→              height: 300,
+   130→              bottom: -80,
+   131→              left: -80,
+   132→              background: "radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(124,92,252,0.04) 40%, transparent 70%)",
+   133→            }}
+   134→          />
+   135→          {/* Floating particles - reduced on mobile */}
+   136→          <div className="hero-particle animate-particle-1 hidden sm:block" style={{ width: 6, height: 6, top: "15%", left: "10%", background: "rgba(212,175,55,0.4)", boxShadow: "0 0 12px rgba(212,175,55,0.3)" }} />
+   137→          <div className="hero-particle animate-particle-2 hidden sm:block" style={{ width: 4, height: 4, top: "30%", left: "70%", background: "rgba(255,107,53,0.5)", boxShadow: "0 0 10px rgba(255,107,53,0.3)" }} />
+   138→          <div className="hero-particle animate-particle-3 hidden sm:block" style={{ width: 5, height: 5, top: "60%", left: "45%", background: "rgba(0,212,170,0.4)", boxShadow: "0 0 10px rgba(0,212,170,0.3)" }} />
+   139→        </div>
+   140→
+   141→        <div
+   142→          className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-16"
+   143→          style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(1rem, 4vw, 2rem)" }}
+   144→        >
+   145→          {/* Left — Text */}
+   146→          <motion.div
+   147→            className="flex-1 max-w-xl lg:max-w-none order-2 lg:order-1"
+   148→            initial={{ opacity: 0, x: -40 }}
+   149→            animate={{ opacity: 1, x: 0 }}
+   150→            transition={{ duration: 0.8, ease: "easeOut" }}
+   151→          >
+   152→            {/* H1 - Mobile optimized */}
+   153→            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.08] tracking-tight mb-4 sm:mb-6">
+   154→              <span style={{ color: "#FFFFFF" }}>{heroData.headingLine1}</span>
+   155→              <br />
+   156→              <span style={{ color: "#D4AF37" }}>{heroData.headingLine2}</span>
+   157→              <br />
+   158→              <span className="text-xl sm:text-3xl md:text-4xl lg:text-6xl" style={{ color: "#FFFFFF" }}>
+   159→                {heroData.headingLine3}
+   160→              </span>
+   161→            </h1>
+   162→
+   163→            {/* Subtitle */}
+   164→            <p
+   165→              className="text-xs sm:text-base leading-relaxed mb-6 sm:mb-8 max-w-lg"
+   166→              style={{ color: "#B0B0B0" }}
+   167→            >
+   168→              {heroData.subtitle}
+   169→            </p>
+   170→
+   171→            {/* Search Bar - Full width on mobile */}
+   172→            <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-5 search-bar-mobile">
+   173→              <div className="relative flex-1 w-full">
+   174→                <input
+   175→                  type="text"
+   176→                  placeholder={heroData.searchPlaceholder}
+   177→                  value={searchQuery}
+   178→                  onChange={(e) => setSearchQuery(e.target.value)}
+   179→                  className="w-full px-4 py-3.5 sm:py-3 pr-12 rounded-lg text-sm outline-none transition-all duration-200 min-h-[44px]"
+   180→                  style={{
+   181→                    background: "#1a1a1a",
+   182→                    border: "1px solid rgba(212,175,55,0.15)",
+   183→                    color: "#FFFFFF",
+   184→                  }}
+   185→                  onFocus={(e) => (e.target.style.borderColor = "rgba(212,175,55,0.5)")}
+   186→                  onBlur={(e) => (e.target.style.borderColor = "rgba(212,175,55,0.15)")}
+   187→                />
+   188→                <svg
+   189→                  className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4"
+   190→                  fill="none"
+   191→                  stroke="#6B7280"
+   192→                  viewBox="0 0 24 24"
+   193→                >
+   194→                  <path
+   195→                    strokeLinecap="round"
+   196→                    strokeLinejoin="round"
+   197→                    strokeWidth={2}
+   198→                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+   199→                  />
+   200→                </svg>
+   201→              </div>
+   202→              <button
+   203→                className="px-6 py-3.5 sm:py-3 rounded-lg text-sm font-semibold text-white transition-all duration-200 hover:brightness-110 flex items-center justify-center gap-2 min-h-[44px]"
+   204→                style={{
+   205→                  background: "linear-gradient(135deg, #174A3A, #10B981)",
+   206→                  whiteSpace: "nowrap",
+   207→                }}
+   208→              >
+   209→                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   210→                  <path
+   211→                    strokeLinecap="round"
+   212→                    strokeLinejoin="round"
+   213→                    strokeWidth={2}
+   214→                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+   215→                  />
+   216→                </svg>
+   217→                Rechercher
+   218→              </button>
+   219→            </div>
+   220→
+   221→            {/* Popular Searches - Wrap on mobile */}
+   222→            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-6 sm:mb-8 tags-mobile">
+   223→              <span className="text-xs font-medium" style={{ color: "#6B7280" }}>
+   224→                Populaire :
+   225→              </span>
+   226→              {heroData.popularSearches.map((tag) => (
+   227→                <button
+   228→                  key={tag}
+   229→                  className="px-2.5 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-medium transition-all duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37] min-h-[36px]"
+   230→                  style={{
+   231→                    background: "transparent",
+   232→                    border: "1px solid rgba(212,175,55,0.2)",
+   233→                    color: "#B0B0B0",
+   234→                  }}
+   235→                >
+   236→                  {tag}
+   237→                </button>
+   238→              ))}
+   239→            </div>
+   240→
+   241→            {/* Stats Row - 2x2 grid on mobile */}
+   242→            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 stats-grid-mobile">
+   243→              {heroData.stats.map((stat, i) => (
+   244→                <motion.div
+   245→                  key={stat.label}
+   246→                  className="flex items-center gap-2 sm:gap-3 p-2 sm:p-0 stat-card-mobile"
+   247→                  initial={{ opacity: 0, y: 20 }}
+   248→                  animate={{ opacity: 1, y: 0 }}
+   249→                  transition={{ delay: 0.3 + i * 0.1 }}
+   250→                >
+   251→                  <span className="text-xl sm:text-2xl flex-shrink-0">{stat.icon}</span>
+   252→                  <div className="min-w-0">
+   253→                    <span className="block text-base sm:text-lg font-bold" style={{ color: "#D4AF37" }}>
+   254→                      {stat.value}
+   255→                    </span>
+   256→                    <span className="block text-[10px] sm:text-[11px] truncate" style={{ color: "#6B7280" }}>
+   257→                      {stat.label}
+   258→                    </span>
+   259→                  </div>
+   260→                </motion.div>
+   261→              ))}
+   262→            </div>
+   263→          </motion.div>
+   264→
+   265→          {/* Right — Hero Image - Reduced on mobile */}
+   266→          <motion.div
+   267→            className="flex-shrink-0 w-full lg:w-[420px] xl:w-[480px] order-1 lg:order-2 hero-image-mobile"
+   268→            initial={{ opacity: 0, x: 40, scale: 0.95 }}
+   269→            animate={{ opacity: 1, x: 0, scale: 1 }}
+   270→            transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
+   271→          >
+   272→            <div className="relative max-w-[280px] sm:max-w-[350px] md:max-w-none mx-auto lg:mx-0">
+   273→              {/* Glow behind image - reduced on mobile */}
+   274→              <div
+   275→                className="absolute inset-0 rounded-2xl sm:rounded-3xl blur-xl sm:blur-3xl"
+   276→                style={{
+   277→                  background: "radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(16,185,129,0.08) 50%, transparent 80%)",
+   278→                  transform: "scale(1.05)",
+   279→                }}
+   280→              />
+   281→              <div
+   282→                className="relative rounded-2xl sm:rounded-3xl overflow-hidden"
+   283→                style={{
+   284→                  border: "1px solid rgba(212,175,55,0.15)",
+   285→                }}
+   286→              >
+   287→                <Image
+   288→                  src="/images/hero-african-woman.png"
+   289→                  alt="African woman — AFRISAAS LAB"
+   290→                  width={480}
+   291→                  height={640}
+   292→                  className="w-full h-auto object-cover max-h-[280px] sm:max-h-[400px] md:max-h-none"
+   293→                  priority
+   294→                />
+   295→              </div>
+   296→              
+   297→              {/* Floating badges - hidden on small mobile */}
+   298→              <div className="absolute -bottom-2 -right-2 sm:bottom-6 sm:right-6 z-20 glass rounded-lg px-2 py-1 sm:px-3 sm:py-2 hidden sm:flex items-center gap-1.5 sm:gap-2">
+   299→                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+   300→                <span className="text-[10px] sm:text-xs font-semibold" style={{ color: "#10B981" }}>Live</span>
+   301→              </div>
+   302→              <div className="absolute -top-2 -left-2 sm:top-6 sm:left-6 z-20 glass rounded-lg px-2 py-1 sm:px-3 sm:py-2 hidden sm:block">
+   303→                <span className="text-[10px] sm:text-xs font-bold text-gradient">MVP Ready</span>
+   304→              </div>
+   305→            </div>
+   306→          </motion.div>
+   307→        </div>
+   308→      </section>
+   309→
+   310→      {/* ═══════════════════════════════════════════════════════════
+   311→          SECTORS SECTION
+   312→          ═══════════════════════════════════════════════════════════ */}
+   313→      <Section id="secteurs" style={{ background: "#0a0a0a" }} className="section-padding-mobile">
+   314→        <SectionDivider title="TROUVEZ UNE SOLUTION PAR SECTEUR" />
+   315→
+   316→        {/* Desktop: Grid view */}
+   317→        <div className="hidden md:grid grid-cols-3 lg:grid-cols-5 gap-4">
+   318→          {sectors.map((sector, i) => (
+   319→            <motion.div
+   320→              key={sector.label}
+   321→              variants={fadeUp}
+   322→              className="group cursor-pointer rounded-xl p-5 text-center transition-all duration-300 hover:-translate-y-2"
+   323→              style={{
+   324→                background: "#1a1a1a",
+   325→                border: "1px solid rgba(212,175,55,0.08)",
+   326→              }}
+   327→              whileHover={{
+   328→                borderColor: "rgba(212,175,55,0.35)",
+   329→                boxShadow: "0 0 40px rgba(212,175,55,0.1)",
+   330→              }}
+   331→            >
+   332→              <span className="text-3xl mb-3 block">{sector.icon}</span>
+   333→              <span className="block text-sm font-semibold" style={{ color: "#FFFFFF" }}>
+   334→                {sector.label}
+   335→              </span>
+   336→              {sector.count > 0 && (
+   337→                <span className="block text-[11px] mt-1" style={{ color: "#6B7280" }}>
+   338→                  {sector.count} solutions
+   339→                </span>
+   340→              )}
+   341→            </motion.div>
+   342→          ))}
+   343→        </div>
+   344→
+   345→        {/* Mobile: Horizontal scrollable carousel */}
+   346→        <div className="md:hidden sectors-carousel scrollbar-hide">
+   347→          {sectors.map((sector, i) => (
+   348→            <motion.div
+   349→              key={sector.label}
+   350→              variants={fadeUp}
+   351→              className="group cursor-pointer rounded-xl p-4 sm:p-5 text-center transition-all duration-300 hover:-translate-y-2 flex-shrink-0"
+   352→              style={{
+   353→                background: "#1a1a1a",
+   354→                border: "1px solid rgba(212,175,55,0.08)",
+   355→                minWidth: "100px",
+   356→                maxWidth: "120px",
+   357→              }}
+   358→              whileHover={{
+   359→                borderColor: "rgba(212,175,55,0.35)",
+   360→                boxShadow: "0 0 40px rgba(212,175,55,0.1)",
+   361→              }}
+   362→              onClick={() => {
+   363→                // Scroll to MVP section filtered by sector
+   364→                const mvpSection = document.getElementById("mvp");
+   365→                if (mvpSection) {
+   366→                  mvpSection.scrollIntoView({ behavior: "smooth" });
+   367→                }
+   368→              }}
+   369→            >
+   370→              <span className="text-2xl sm:text-3xl mb-2 sm:mb-3 block">{sector.icon}</span>
+   371→              <span className="block text-xs sm:text-sm font-semibold leading-tight" style={{ color: "#FFFFFF" }}>
+   372→                {sector.label}
+   373→              </span>
+   374→              {sector.count > 0 && (
+   375→                <span className="block text-[10px] sm:text-[11px] mt-1" style={{ color: "#6B7280" }}>
+   376→                  {sector.count}
+   377→                </span>
+   378→              )}
+   379→            </motion.div>
+   380→          ))}
+   381→        </div>
+   382→
+   383→        {/* Swipe hint for mobile */}
+   384→        <div className="swipe-indicator md:hidden">
+   385→          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   386→            <path d="M5 12h14M12 5l7 7-7 7"/>
+   387→          </svg>
+   388→          <span>Glisser pour voir plus</span>
+   389→          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   390→            <path d="M19 12H5M12 19l-7-7 7-7"/>
+   391→          </svg>
+   392→        </div>
+   393→      </Section>
+   394→
+   395→      {/* ═══════════════════════════════════════════════════════════
+   396→          POPULAR MVPs SECTION
+   397→          ═══════════════════════════════════════════════════════════ */}
+   398→      <Section id="mvp" style={{ background: "#080808" }}>
+   399→        {/* Section Header */}
+   400→        <motion.div variants={fadeUp} className="flex items-center justify-between mb-10">
+   401→          <h2
+   402→            className="text-2xl md:text-3xl font-bold"
+   403→            style={{ color: "#FFFFFF" }}
+   404→          >
+   405→            MVP <span style={{ color: "#D4AF37" }}>POPULAIRES</span>
+   406→          </h2>
+   407→          <a
+   408→            href="/marketplace"
+   409→            className="text-sm font-medium transition-colors duration-200 hover:text-[#D4AF37]"
+   410→            style={{ color: "#10B981" }}
+   411→          >
+   412→            Voir tous les MVP ›
+   413→          </a>
+   414→        </motion.div>
+   415→
+   416→        {/* MVP Cards Grid - Premium Design */}
+   417→        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+   418→          {popularMvps.map((mvp) => (
+   419→            <motion.div
+   420→              key={mvp.slug}
+   421→              variants={scaleUp}
+   422→            >
+   423→              <MvpCard
+   424→                slug={mvp.slug}
+   425→                title={mvp.title}
+   426→                description={mvp.description}
+   427→                category={mvp.category}
+   428→                price={mvp.price}
+   429→                badge={mvp.badge}
+   430→                badgeColor={mvp.badgeColor as "green" | "brown" | "blue" | "gold" | "purple"}
+   431→                image={mvp.image}
+   432→                features={mvp.features}
+   433→                rating={mvp.rating}
+   434→              />
+   435→            </motion.div>
+   436→          ))}
+   437→        </div>
+   438→      </Section>
+   439→
+   440→      {/* ═══════════════════════════════════════════════════════════
+   441→          WHY CHOOSE US SECTION
+   442→          ═══════════════════════════════════════════════════════════ */}
+   443→      <Section id="services" style={{ background: "#0a0a0a" }}>
+   444→        <SectionDivider title="POURQUOI CHOISIR AFRISAAS LAB ?" />
+   445→
+   446→        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+   447→          {whyChooseUs.map((item) => (
+   448→            <motion.div
+   449→              key={item.title}
+   450→              variants={fadeUp}
+   451→              className="group rounded-xl p-6 text-center transition-all duration-300 hover:-translate-y-2"
+   452→              style={{
+   453→                background: "#111111",
+   454→                border: "1px solid rgba(212,175,55,0.08)",
+   455→              }}
+   456→              whileHover={{
+   457→                borderColor: "rgba(212,175,55,0.3)",
+   458→                boxShadow: "0 8px 30px rgba(0,0,0,0.3), 0 0 25px rgba(212,175,55,0.06)",
+   459→              }}
+   460→            >
+   461→              <span className="text-4xl mb-4 block">{item.icon}</span>
+   462→              <h3
+   463→                className="text-sm font-bold mb-2"
+   464→                style={{ color: "#FFFFFF" }}
+   465→              >
+   466→                {item.title}
+   467→              </h3>
+   468→              <p
+   469→                className="text-xs leading-relaxed"
+   470→                style={{ color: "#6B7280" }}
+   471→              >
+   472→                {item.description}
+   473→              </p>
+   474→            </motion.div>
+   475→          ))}
+   476→        </div>
+   477→      </Section>
+   478→
+   479→      {/* ═══════════════════════════════════════════════════════════
+   480→          HOW IT WORKS SECTION
+   481→          ═══════════════════════════════════════════════════════════ */}
+   482→      <Section id="about" style={{ background: "#080808" }}>
+   483→        <SectionDivider title="COMMENT ÇA MARCHE ?" />
+   484→
+   485→        <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-4">
+   486→          {/* Dotted line (desktop) */}
+   487→          <div
+   488→            className="hidden md:block absolute top-12 left-[12%] right-[12%] h-px"
+   489→            style={{
+   490→              borderTop: "2px dashed rgba(212,175,55,0.2)",
+   491→            }}
+   492→          />
+   493→
+   494→          {howItWorks.map((step, i) => (
+   495→            <motion.div
+   496→              key={step.step}
+   497→              variants={fadeUp}
+   498→              className="relative flex-1 flex flex-col items-center text-center max-w-[220px] mx-auto"
+   499→            >
+   500→              {/* Step Number Circle */}
+   501→              <div
+   502→                className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold mb-4 relative z-10"
+   503→                style={{
+   504→                  background: "linear-gradient(135deg, #174A3A, #10B981)",
+   505→                  color: "#FFFFFF",
+   506→                  boxShadow: "0 0 25px rgba(16,185,129,0.2)",
+   507→                }}
+   508→              >
+   509→                {step.step}
+   510→              </div>
+   511→
+   512→              {/* Icon */}
+   513→              <span className="text-2xl mb-3">{step.icon}</span>
+   514→
+   515→              {/* Title */}
+   516→              <h3
+   517→                className="text-sm font-bold mb-2"
+   518→                style={{ color: "#FFFFFF" }}
+   519→              >
+   520→                {step.title}
+   521→              </h3>
+   522→
+   523→              {/* Description */}
+   524→              <p
+   525→                className="text-xs leading-relaxed"
+   526→                style={{ color: "#6B7280" }}
+   527→              >
+   528→                {step.description}
+   529→              </p>
+   530→
+   531→              {/* Arrow (between steps on mobile) */}
+   532→              {i < howItWorks.length - 1 && (
+   533→                <div className="md:hidden flex justify-center w-full py-3">
+   534→                  <svg
+   535→                    className="w-4 h-4"
+   536→                    fill="none"
+   537→                    stroke="#D4AF37"
+   538→                    viewBox="0 0 24 24"
+   539→                  >
+   540→                    <path
+   541→                      strokeLinecap="round"
+   542→                      strokeLinejoin="round"
+   543→                      strokeWidth={2}
+   544→                      d="M19 14l-7 7m0 0l-7-7m7 7V3"
+   545→                    />
+   546→                  </svg>
+   547→                </div>
+   548→              )}
+   549→            </motion.div>
+   550→          ))}
+   551→        </div>
+   552→      </Section>
+   553→
+   554→      {/* ═══════════════════════════════════════════════════════════
+   555→          AI LAB BANNER
+   556→          ═══════════════════════════════════════════════════════════ */}
+   557→      <section
+   558→        id="ai-lab"
+   559→        className="relative overflow-hidden py-20 md:py-28 section-transition"
+   560→        style={{
+   561→          background: "linear-gradient(135deg, #0a1a14 0%, #0d2818 30%, #112214 60%, #0a0a0a 100%)",
+   562→        }}
+   563→      >
+   564→        <div className="absolute inset-0 pointer-events-none">
+   565→          <div
+   566→            className="absolute rounded-full animate-float-slow"
+   567→            style={{
+   568→              width: 600,
+   569→              height: 600,
+   570→              right: -150,
+   571→              top: -200,
+   572→              background: "radial-gradient(circle, rgba(16,185,129,0.12) 0%, rgba(0,212,170,0.04) 40%, transparent 60%)",
+   573→            }}
+   574→          />
+   575→          <div
+   576→            className="absolute rounded-full animate-float-delayed"
+   577→            style={{
+   578→              width: 400,
+   579→              height: 400,
+   580→              left: -100,
+   581→              bottom: -150,
+   582→              background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, rgba(255,184,0,0.04) 40%, transparent 60%)",
+   583→            }}
+   584→          />
+   585→          <div className="hero-particle animate-particle-2" style={{ width: 4, height: 4, top: "20%", right: "15%", background: "rgba(0,212,170,0.4)", boxShadow: "0 0 10px rgba(0,212,170,0.3)" }} />
+   586→          <div className="hero-particle animate-particle-3" style={{ width: 3, height: 3, top: "70%", left: "60%", background: "rgba(212,175,55,0.35)", boxShadow: "0 0 8px rgba(212,175,55,0.2)" }} />
+   587→        </div>
+   588→
+   589→        <div
+   590→          className="relative flex flex-col lg:flex-row items-center gap-12 lg:gap-16"
+   591→          style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(1rem, 4vw, 2rem)" }}
+   592→        >
+   593→          {/* Left — Content */}
+   594→          <div className="flex-1">
+   595→            <div
+   596→              ref={useRef(null)}
+   597→            >
+   598→              {/* Badge */}
+   599→              <motion.div
+   600→                initial={{ opacity: 0, y: 20 }}
+   601→                whileInView={{ opacity: 1, y: 0 }}
+   602→                viewport={{ once: true }}
+   603→                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6"
+   604→                style={{
+   605→                  background: "rgba(212,175,55,0.08)",
+   606→                  border: "1px solid rgba(212,175,55,0.2)",
+   607→                }}
+   608→              >
+   609→                <span
+   610→                  className="w-2 h-2 rounded-full"
+   611→                  style={{ background: "#D4AF37" }}
+   612→                />
+   613→                <span
+   614→                  className="text-xs font-bold tracking-widest uppercase"
+   615→                  style={{ color: "#D4AF37" }}
+   616→                >
+   617→                  AFRISAAS AI LAB
+   618→                </span>
+   619→              </motion.div>
+   620→
+   621→              {/* Headline */}
+   622→              <motion.h2
+   623→                initial={{ opacity: 0, y: 20 }}
+   624→                whileInView={{ opacity: 1, y: 0 }}
+   625→                viewport={{ once: true }}
+   626→                transition={{ delay: 0.1 }}
+   627→                className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-5"
+   628→                style={{ color: "#FFFFFF" }}
+   629→              >
+   630→                L&apos;IA AU SERVICE{" "}
+   631→                <span style={{ color: "#D4AF37" }}>DE VOTRE CROISSANCE</span>
+   632→              </motion.h2>
+   633→
+   634→              {/* Description */}
+   635→              <motion.p
+   636→                initial={{ opacity: 0, y: 20 }}
+   637→                whileInView={{ opacity: 1, y: 0 }}
+   638→                viewport={{ once: true }}
+   639→                transition={{ delay: 0.2 }}
+   640→                className="text-sm sm:text-base leading-relaxed mb-6 max-w-lg"
+   641→                style={{ color: "#B0B0B0" }}
+   642→              >
+   643→                Des solutions intelligentes pour automatiser, analyser et faire
+   644→                passer votre entreprise au niveau supérieur.
+   645→              </motion.p>
+   646→
+   647→              {/* CTA Button */}
+   648→              <motion.a
+   649→                initial={{ opacity: 0, y: 20 }}
+   650→                whileInView={{ opacity: 1, y: 0 }}
+   651→                viewport={{ once: true }}
+   652→                transition={{ delay: 0.3 }}
+   653→                href="#ai-lab"
+   654→                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 hover:brightness-110"
+   655→                style={{
+   656→                  background: "linear-gradient(135deg, #D4AF37, #B8923E)",
+   657→                  color: "#0a0a0a",
+   658→                }}
+   659→              >
+   660→                Découvrir nos solutions IA
+   661→                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   662→                  <path
+   663→                    strokeLinecap="round"
+   664→                    strokeLinejoin="round"
+   665→                    strokeWidth={2}
+   666→                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+   667→                  />
+   668→                </svg>
+   669→              </motion.a>
+   670→            </div>
+   671→          </div>
+   672→
+   673→          {/* Right — AI Features Checklist + Image */}
+   674→          <div className="flex-shrink-0 w-full lg:w-[420px]">
+   675→            <motion.div
+   676→              initial={{ opacity: 0, x: 40 }}
+   677→              whileInView={{ opacity: 1, x: 0 }}
+   678→              viewport={{ once: true }}
+   679→              transition={{ duration: 0.6 }}
+   680→              className="relative"
+   681→            >
+   682→              <div
+   683→                className="absolute inset-0 rounded-2xl blur-2xl"
+   684→                style={{
+   685→                  background: "radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)",
+   686→                  transform: "scale(1.15)",
+   687→                }}
+   688→              />
+   689→              <div
+   690→                className="relative rounded-2xl overflow-hidden"
+   691→                style={{
+   692→                  border: "1px solid rgba(16,185,129,0.15)",
+   693→                }}
+   694→              >
+   695→                <Image
+   696→                  src="/images/ai-robot.png"
+   697→                  alt="AFRISAAS AI — Robot IA"
+   698→                  width={420}
+   699→                  height={420}
+   700→                  className="w-full h-auto object-cover"
+   701→                />
+   702→              </div>
+   703→            </motion.div>
+   704→
+   705→            {/* Feature Checklist */}
+   706→            <motion.div
+   707→              initial={{ opacity: 0, y: 20 }}
+   708→              whileInView={{ opacity: 1, y: 0 }}
+   709→              viewport={{ once: true }}
+   710→              transition={{ delay: 0.3 }}
+   711→              className="mt-6 grid grid-cols-2 gap-3"
+   712→            >
+   713→              {aiLabFeatures.map((feature) => (
+   714→                <div
+   715→                  key={feature}
+   716→                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg"
+   717→                  style={{
+   718→                    background: "rgba(16,185,129,0.08)",
+   719→                    border: "1px solid rgba(16,185,129,0.12)",
+   720→                  }}
+   721→                >
+   722→                  <svg
+   723→                    className="w-4 h-4 flex-shrink-0"
+   724→                    fill="none"
+   725→                    stroke="#D4AF37"
+   726→                    viewBox="0 0 24 24"
+   727→                  >
+   728→                    <path
+   729→                      strokeLinecap="round"
+   730→                      strokeLinejoin="round"
+   731→                      strokeWidth={2.5}
+   732→                      d="M5 13l4 4L19 7"
+   733→                    />
+   734→                  </svg>
+   735→                  <span
+   736→                    className="text-xs font-semibold"
+   737→                    style={{ color: "#D8CFBF" }}
+   738→                  >
+   739→                    {feature}
+   740→                  </span>
+   741→                </div>
+   742→              ))}
+   743→            </motion.div>
+   744→          </div>
+   745→        </div>
+   746→      </section>
+   747→
+   748→      {/* ═══════════════════════════════════════════════════════════
+   749→          TESTIMONIALS SECTION
+   750→          ═══════════════════════════════════════════════════════════ */}
+   751→      <Section style={{ background: "#0a0a0a" }}>
+   752→        <SectionDivider title="ILS NOUS FONT CONFIANCE" />
+   753→
+   754→        {/* Desktop: Show all 4 */}
+   755→        <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+   756→          {testimonials.map((t, i) => (
+   757→            <motion.div
+   758→              key={t.name}
+   759→              variants={fadeUp}
+   760→              className="rounded-xl p-6 transition-all duration-300 hover:-translate-y-1"
+   761→              style={{
+   762→                background: "#1a1a1a",
+   763→                border: "1px solid rgba(212,175,55,0.08)",
+   764→              }}
+   765→            >
+   766→              {/* Stars */}
+   767→              <div className="flex gap-1 mb-3">
+   768→                {[...Array(5)].map((_, s) => (
+   769→                  <svg
+   770→                    key={s}
+   771→                    className="w-3.5 h-3.5"
+   772→                    fill="#D4AF37"
+   773→                    viewBox="0 0 20 20"
+   774→                  >
+   775→                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+   776→                  </svg>
+   777→                ))}
+   778→              </div>
+   779→
+   780→              {/* Quote */}
+   781→              <p
+   782→                className="text-sm leading-relaxed mb-5 italic"
+   783→                style={{ color: "#B0B0B0" }}
+   784→              >
+   785→                &ldquo;{t.text}&rdquo;
+   786→              </p>
+   787→
+   788→              {/* Author */}
+   789→              <div className="flex items-center gap-3">
+   790→                <div
+   791→                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
+   792→                  style={{
+   793→                    background: "linear-gradient(135deg, #174A3A, #10B981)",
+   794→                    color: "#FFFFFF",
+   795→                  }}
+   796→                >
+   797→                  {t.initials}
+   798→                </div>
+   799→                <div>
+   800→                  <span
+   801→                    className="block text-sm font-semibold"
+   802→                    style={{ color: "#FFFFFF" }}
+   803→                  >
+   804→                    {t.name}
+   805→                  </span>
+   806→                  <span
+   807→                    className="block text-[11px]"
+   808→                    style={{ color: "#6B7280" }}
+   809→                  >
+   810→                    {t.role}
+   811→                  </span>
+   812→                </div>
+   813→              </div>
+   814→            </motion.div>
+   815→          ))}
+   816→        </div>
+   817→
+   818→        {/* Mobile: Carousel with swipe support */}
+   819→        <div className="md:hidden">
+   820→          {/* Touch-friendly carousel container */}
+   821→          <div 
+   822→            className="relative overflow-hidden rounded-xl"
+   823→            onTouchStart={(e) => {
+   824→              // Store touch start position for swipe detection
+   825→              const touch = e.touches[0];
+   826→              const container = e.currentTarget;
+   827→              (container as any).touchStartX = touch.clientX;
+   828→            }}
+   829→            onTouchEnd={(e) => {
+   830→              // Handle swipe
+   831→              const touch = e.changedTouches[0];
+   832→              const container = e.currentTarget;
+   833→              const startX = (container as any).touchStartX || 0;
+   834→              const diff = startX - touch.clientX;
+   835→              
+   836→              // Swipe threshold of 50px
+   837→              if (Math.abs(diff) > 50) {
+   838→                if (diff > 0 && testimonialIndex < testimonials.length - 1) {
+   839→                  setTestimonialIndex(testimonialIndex + 1);
+   840→                } else if (diff < 0 && testimonialIndex > 0) {
+   841→                  setTestimonialIndex(testimonialIndex - 1);
+   842→                }
+   843→              }
+   844→            }}
+   845→          >
+   846→            <AnimatePresence mode="wait">
+   847→              <motion.div
+   848→                key={testimonialIndex}
+   849→                initial={{ opacity: 0, x: 30 }}
+   850→                animate={{ opacity: 1, x: 0 }}
+   851→                exit={{ opacity: 0, x: -30 }}
+   852→                transition={{ duration: 0.3 }}
+   853→                className="rounded-xl p-5 sm:p-6"
+   854→                style={{
+   855→                  background: "#1a1a1a",
+   856→                  border: "1px solid rgba(212,175,55,0.08)",
+   857→                }}
+   858→              >
+   859→                {/* Stars */}
+   860→                <div className="flex gap-1 mb-3">
+   861→                  {[...Array(5)].map((_, s) => (
+   862→                    <svg key={s} className="w-4 h-4" fill="#D4AF37" viewBox="0 0 20 20">
+   863→                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+   864→                    </svg>
+   865→                  ))}
+   866→                </div>
+   867→
+   868→                <p
+   869→                  className="text-sm leading-relaxed mb-4 sm:mb-5 italic"
+   870→                  style={{ color: "#B0B0B0" }}
+   871→                >
+   872→                  &ldquo;{testimonials[testimonialIndex].text}&rdquo;
+   873→                </p>
+   874→
+   875→                <div className="flex items-center gap-3">
+   876→                  <div
+   877→                    className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+   878→                    style={{
+   879→                      background: "linear-gradient(135deg, #174A3A, #10B981)",
+   880→                      color: "#FFFFFF",
+   881→                    }}
+   882→                  >
+   883→                    {testimonials[testimonialIndex].initials}
+   884→                  </div>
+   885→                  <div className="min-w-0">
+   886→                    <span className="block text-sm font-semibold truncate" style={{ color: "#FFFFFF" }}>
+   887→                      {testimonials[testimonialIndex].name}
+   888→                    </span>
+   889→                    <span className="block text-[11px] truncate" style={{ color: "#6B7280" }}>
+   890→                      {testimonials[testimonialIndex].role}
+   891→                    </span>
+   892→                  </div>
+   893→                </div>
+   894→              </motion.div>
+   895→            </AnimatePresence>
+   896→
+   897→            {/* Navigation Arrows - Touch friendly */}
+   898→            <div className="flex justify-between mt-4 px-2">
+   899→              <button
+   900→                onClick={() => testimonialIndex > 0 && setTestimonialIndex(testimonialIndex - 1)}
+   901→                disabled={testimonialIndex === 0}
+   902→                className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+   903→                style={{
+   904→                  background: testimonialIndex === 0 ? "rgba(255,255,255,0.05)" : "rgba(212,175,55,0.15)",
+   905→                  border: "1px solid rgba(212,175,55,0.2)",
+   906→                  color: testimonialIndex === 0 ? "#6B7280" : "#D4AF37",
+   907→                }}
+   908→              >
+   909→                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   910→                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+   911→                </svg>
+   912→              </button>
+   913→              
+   914→              <span className="text-xs font-medium self-center" style={{ color: "#6B7280" }}>
+   915→                {testimonialIndex + 1} / {testimonials.length}
+   916→              </span>
+   917→              
+   918→              <button
+   919→                onClick={() => testimonialIndex < testimonials.length - 1 && setTestimonialIndex(testimonialIndex + 1)}
+   920→                disabled={testimonialIndex === testimonials.length - 1}
+   921→                className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+   922→                style={{
+   923→                  background: testimonialIndex === testimonials.length - 1 ? "rgba(255,255,255,0.05)" : "rgba(212,175,55,0.15)",
+   924→                  border: "1px solid rgba(212,175,55,0.2)",
+   925→                  color: testimonialIndex === testimonials.length - 1 ? "#6B7280" : "#D4AF37",
+   926→                }}
+   927→              >
+   928→                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   929→                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+   930→                </svg>
+   931→              </button>
+   932→            </div>
+   933→          </div>
+   934→
+   935→          {/* Dots - Larger for touch */}
+   936→          <div className="flex justify-center gap-1 mt-4">
+   937→            {testimonials.map((_, i) => (
+   938→              <button
+   939→                key={i}
+   940→                onClick={() => setTestimonialIndex(i)}
+   941→                className="testimonial-dot transition-all duration-200"
+   942→                style={{
+   943→                  background: "transparent",
+   944→                }}
+   945→                aria-label={`Témoignage ${i + 1}`}
+   946→              >
+   947→                <span
+   948→                  className="testimonial-dot-inner transition-all duration-200"
+   949→                  style={{
+   950→                    background:
+   951→                      i === testimonialIndex
+   952→                        ? "#D4AF37"
+   953→                        : "rgba(212,175,55,0.25)",
+   954→                    transform: i === testimonialIndex ? "scale(1.3)" : "scale(1)",
+   955→                    display: "block",
+   956→                  }}
+   957→                />
+   958→              </button>
+   959→            ))}
+   960→          </div>
+   961→          
+   962→          {/* Swipe hint */}
+   963→          <div className="swipe-indicator">
+   964→            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+   965→              <path d="M5 12h14M12 5l7 7-7 7"/>
+   966→            </svg>
+   967→            <span>Glisser pour naviguer</span>
+   968→          </div>
+   969→        </div>
+   970→      </Section>
+   971→
+   972→      {/* ═══════════════════════════════════════════════════════════
+   973→          FINAL CTA SECTION
+   974→          ═══════════════════════════════════════════════════════════ */}
+   975→      <section
+   976→        className="relative py-20 md:py-28 overflow-hidden"
+   977→        style={{ background: "#080808" }}
+   978→      >
+   979→        {/* Subtle African pattern borders */}
+   980→        <div className="absolute inset-x-0 top-0 h-px" style={{
+   981→          background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.2), rgba(16,185,129,0.15), rgba(212,175,55,0.2), transparent)",
+   982→        }} />
+   983→        <div className="absolute inset-x-0 bottom-0 h-px" style={{
+   984→          background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.2), rgba(16,185,129,0.15), rgba(212,175,55,0.2), transparent)",
+   985→        }} />
+   986→
+   987→        <div
+   988→          className="relative text-center"
+   989→          style={{ maxWidth: 700, margin: "0 auto", padding: "0 clamp(1rem, 4vw, 2rem)" }}
+   990→        >
+   991→          <motion.div
+   992→            initial={{ opacity: 0, y: 30 }}
+   993→            whileInView={{ opacity: 1, y: 0 }}
+   994→            viewport={{ once: true }}
+   995→          >
+   996→            <h2
+   997→              className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-4"
+   998→              style={{ color: "#FFFFFF" }}
+   999→            >
+  1000→              {finalCta.headline}
+  1001→            </h2>
+  1002→            <p
+  1003→              className="text-sm sm:text-base mb-8"
+  1004→              style={{ color: "#B0B0B0" }}
+  1005→            >
+  1006→              {finalCta.subtitle}
+  1007→            </p>
+  1008→
+  1009→            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+  1010→              <a
+  1011→                href="#mvp"
+  1012→                className="px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 hover:brightness-110 inline-flex items-center gap-2"
+  1013→                style={{
+  1014→                  background: "linear-gradient(135deg, #174A3A, #10B981)",
+  1015→                  color: "#FFFFFF",
+  1016→                  border: "1px solid rgba(16,185,129,0.3)",
+  1017→                }}
+  1018→              >
+  1019→                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  1020→                  <path
+  1021→                    strokeLinecap="round"
+  1022→                    strokeLinejoin="round"
+  1023→                    strokeWidth={2}
+  1024→                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
+  1025→                  />
+  1026→                </svg>
+  1027→                {finalCta.primaryButton.label}
+  1028→              </a>
+  1029→              <a
+  1030→                href="#contact"
+  1031→                className="px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 hover:brightness-110"
+  1032→                style={{
+  1033→                  background: "linear-gradient(135deg, #D4AF37, #B8923E)",
+  1034→                  color: "#0a0a0a",
+  1035→                }}
+  1036→              >
+  1037→                {finalCta.secondaryButton.label}
+  1038→              </a>
+  1039→            </div>
+  1040→          </motion.div>
+  1041→        </div>
+  1042→      </section>
+  1043→
+  1044→      <Footer />
+  1045→    </main>
+  1046→  );
+  1047→}
+  1048→

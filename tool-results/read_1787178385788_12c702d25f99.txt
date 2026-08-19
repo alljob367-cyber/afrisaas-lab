@@ -1,0 +1,757 @@
+     1→"use client";
+     2→
+     3→import Link from "next/link";
+     4→import { usePathname } from "next/navigation";
+     5→
+     6→/* ═══════════════════════════════════════════════════════════════
+     7→   AFRICAN FUTURISM SIDEBAR - Premium Navigation Component
+     8→   Theme: Or (#D4AF37), Noir (#0a0a0a), Vert (#10B981)
+     9→   ═══════════════════════════════════════════════════════════════ */
+    10→
+    11→// Types
+    12→export interface NavItem {
+    13→  id: string;
+    14→  label: string;
+    15→  icon: string;
+    16→  href?: string;
+    17→  badge?: string;
+    18→  badgeColor?: string;
+    19→}
+    20→
+    21→export interface NavSection {
+    22→  title: string;
+    23→  items: NavItem[];
+    24→}
+    25→
+    26→// Color configuration for icons by section
+    27→const iconColors: Record<string, string> = {
+    28→  overview: "#D4AF37",      // Gold for dashboard
+    29→  marketplace: "#D4AF37",   // Gold for marketplace (prominent)
+    30→  purchases: "#10B981",    // Green for purchases
+    31→  orders: "#3B82F6",       // Blue for orders
+    32→  downloads: "#8B5CF6",    // Purple for downloads
+    33→  payments: "#F59E0B",     // Amber for payments
+    34→  messages: "#EC4899",     // Pink for messages
+    35→  tickets: "#06B6D4",      // Cyan for tickets
+    36→  profile: "#6B7280",      // Gray for profile
+    37→  security: "#EF4444",     // Red for security
+    38→  preferences: "#6B7280",  // Gray for preferences
+    39→};
+    40→
+    41→// Navigation sections with full structure
+    42→const navSections: NavSection[] = [
+    43→  {
+    44→    title: "TABLEAU DE BORD",
+    45→    items: [
+    46→      { id: "overview", label: "Aperçu", icon: "🏠", href: "/dashboard" },
+    47→      { id: "marketplace", label: "Marketplace", icon: "🛒", href: "/marketplace" },
+    48→    ],
+    49→  },
+    50→  {
+    51→    title: "MES ACTIVITÉS",
+    52→    items: [
+    53→      { id: "purchases", label: "Mes Achats", icon: "📦", href: "/dashboard/purchases" },
+    54→      { id: "orders", label: "Mes Commandes", icon: "📄", href: "/dashboard/orders" },
+    55→      { id: "downloads", label: "Mes Téléchargements", icon: "⬇️", href: "/dashboard/downloads" },
+    56→      { id: "payments", label: "Mes Paiements", icon: "💳", href: "/dashboard/payments" },
+    57→    ],
+    58→  },
+    59→  {
+    60→    title: "SUPPORT",
+    61→    items: [
+    62→      { id: "messages", label: "Messages", icon: "💬", href: "/dashboard/messages", badge: "1" },
+    63→      { id: "tickets", label: "Tickets", icon: "🎫", href: "/dashboard/tickets" },
+    64→    ],
+    65→  },
+    66→  {
+    67→    title: "MON COMPTE",
+    68→    items: [
+    69→      { id: "profile", label: "Profil", icon: "👤", href: "/dashboard/profile" },
+    70→      { id: "security", label: "Sécurité", icon: "🔒", href: "/dashboard/security" },
+    71→      { id: "preferences", label: "Préférences", icon: "⚙️", href: "/dashboard/preferences" },
+    72→    ],
+    73→  },
+    74→];
+    75→
+    76→interface SidebarProps {
+    77→  isOpen: boolean;
+    78→  onToggle: () => void;
+    79→  isMobileOpen: boolean;
+    80→  onMobileClose: () => void;
+    81→}
+    82→
+    83→export function DashboardSidebar({ 
+    84→  isOpen, 
+    85→  onToggle, 
+    86→  isMobileOpen, 
+    87→  onMobileClose 
+    88→}: SidebarProps) {
+    89→  const pathname = usePathname();
+    90→
+    91→  const isActive = (href: string | undefined) => {
+    92→    if (!href) return false;
+    93→    if (href === "/dashboard") return pathname === "/dashboard";
+    94→    return pathname.startsWith(href);
+    95→  };
+    96→
+    97→  return (
+    98→    <>
+    99→      {/* Mobile Overlay */}
+   100→      {isMobileOpen && (
+   101→        <div
+   102→          className="fixed inset-0 z-40 lg:hidden sidebar-overlay"
+   103→          onClick={onMobileClose}
+   104→        />
+   105→      )}
+   106→
+   107→      <aside
+   108→        className={`
+   109→          fixed lg:static z-50 h-full flex flex-col transition-all duration-300
+   110→          ${isOpen ? "w-[260px]" : "w-0 lg:w-[72px]"}
+   111→          ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+   112→        `}
+   113→        style={{
+   114→          background: "var(--bg-primary, #0a0a0a)",
+   115→          borderRight: "1px solid rgba(212,175,55,0.08)",
+   116→          overflow: "hidden",
+   117→        }}
+   118→      >
+   119→        {/* Logo Section */}
+   120→        <div 
+   121→          className="flex items-center gap-2 px-5 h-16 flex-shrink-0"
+   122→          style={{ borderBottom: "1px solid rgba(212,175,55,0.08)" }}
+   123→        >
+   124→          <div
+   125→            className="w-8 h-8 flex items-center justify-center flex-shrink-0 sidebar-logo"
+   126→            style={{
+   127→              background: "linear-gradient(135deg, #D4AF37, #8A5A32)",
+   128→              clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+   129→            }}
+   130→          >
+   131→            <span className="text-[10px] font-bold text-white">AL</span>
+   132→          </div>
+   133→          {isOpen && (
+   134→            <div className="leading-none overflow-hidden">
+   135→              <span className="text-sm font-bold text-white whitespace-nowrap sidebar-title">
+   136→                AFRISAAS
+   137→              </span>
+   138→              <span 
+   139→                className="block text-[9px] font-semibold tracking-widest whitespace-nowrap"
+   140→                style={{ color: "#D4AF37" }}
+   141→              >
+   142→                LAB
+   143→              </span>
+   144→            </div>
+   145→          )}
+   146→        </div>
+   147→
+   148→        {/* Navigation Sections */}
+   149→        <nav className="flex-1 overflow-y-auto py-4 scrollbar-hide">
+   150→          {navSections.map((section) => (
+   151→            <div key={section.title} className="mb-5">
+   152→              {isOpen && (
+   153→                <span 
+   154→                  className="block px-5 mb-2 text-[10px] font-bold tracking-[0.15em] uppercase section-title"
+   155→                  style={{ color: "#4B5563" }}
+   156→                >
+   157→                  {section.title}
+   158→                </span>
+   159→              )}
+   160→              <div className="space-y-0.5">
+   161→                {section.items.map((item) => {
+   162→                  const active = isActive(item.href);
+   163→                  const iconColor = iconColors[item.id] || "#6B7280";
+   164→                  
+   165→                  if (item.href) {
+   166→                    return (
+   167→                      <Link
+   168→                        key={item.id}
+   169→                        href={item.href}
+   170→                        className={`
+   171→                          sidebar-nav-item w-full flex items-center gap-3 px-5 py-2.5 text-[13px] font-medium 
+   172→                          transition-all duration-200 relative group
+   173→                          ${!isOpen ? "justify-center px-0" : ""}
+   174→                        `}
+   175→                        style={{
+   176→                          color: active ? "#FFFFFF" : "#6B7280",
+   177→                          background: active ? "rgba(212,175,55,0.15)" : "transparent",
+   178→                          borderLeft: active ? "3px solid #D4AF37" : "3px solid transparent",
+   179→                        }}
+   180→                        onClick={() => {
+   181→                          if (window.innerWidth < 1024) onMobileClose();
+   182→                        }}
+   183→                      >
+   184→                        <span 
+   185→                          className="text-base flex-shrink-0 sidebar-icon"
+   186→                          style={{ 
+   187→                            filter: active ? "none" : "grayscale(50%)",
+   188→                            opacity: active ? 1 : 0.7,
+   189→                          }}
+   190→                        >
+   191→                          {item.icon}
+   192→                        </span>
+   193→                        {isOpen && (
+   194→                          <>
+   195→                            <span className="whitespace-nowrap sidebar-label">{item.label}</span>
+   196→                            {item.badge && (
+   197→                              <span
+   198→                                className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full sidebar-badge"
+   199→                                style={{ 
+   200→                                  background: item.id === "marketplace" 
+   201→                                    ? "rgba(212,175,55,0.2)" 
+   202→                                    : "rgba(16,185,129,0.15)", 
+   203→                                  color: item.id === "marketplace" 
+   204→                                    ? "#D4AF37" 
+   205→                                    : "#10B981" 
+   206→                                }}
+   207→                              >
+   208→                                {item.badge}
+   209→                              </span>
+   210→                            )}
+   211→                          </>
+   212→                        )}
+   213→                        
+   214→                        {/* Tooltip for collapsed state */}
+   215→                        {!isOpen && (
+   216→                          <span 
+   217→                            className="absolute left-full ml-2 px-2 py-1 rounded-md text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none sidebar-tooltip"
+   218→                            style={{
+   219→                              background: "#1f1f1f",
+   220→                              color: "#FFFFFF",
+   221→                              border: "1px solid rgba(212,175,55,0.2)",
+   222→                              zIndex: 100,
+   223→                            }}
+   224→                          >
+   225→                            {item.label}
+   226→                          </span>
+   227→                        )}
+   228→                      </Link>
+   229→                    );
+   230→                  }
+   231→                  
+   232→                  // Fallback for items without href (buttons)
+   233→                  return (
+   234→                    <button
+   235→                      key={item.id}
+   236→                      className={`
+   237→                        sidebar-nav-item w-full flex items-center gap-3 px-5 py-2.5 text-[13px] font-medium 
+   238→                        transition-all duration-200 relative
+   239→                        ${!isOpen ? "justify-center px-0" : ""}
+   240→                      `}
+   241→                      style={{
+   242→                        color: "#6B7280",
+   243→                      }}
+   244→                    >
+   245→                      <span className="text-base flex-shrink-0">{item.icon}</span>
+   246→                      {isOpen && <span className="whitespace-nowrap">{item.label}</span>}
+   247→                    </button>
+   248→                  );
+   249→                })}
+   250→              </div>
+   251→            </div>
+   252→          ))}
+   253→        </nav>
+   254→
+   255→        {/* Marketplace CTA - Only visible when open */}
+   256→        {isOpen && (
+   257→          <div className="px-5 mb-4">
+   258→            <Link
+   259→              href="/marketplace"
+   260→              className="block p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] marketplace-cta"
+   261→              style={{
+   262→                background: "linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(212,175,55,0.05) 100%)",
+   263→                border: "1px solid rgba(212,175,55,0.25)",
+   264→              }}
+   265→            >
+   266→              <div className="flex items-center gap-2 mb-2">
+   267→                <span className="text-lg">✨</span>
+   268→                <span className="text-xs font-bold" style={{ color: "#D4AF37" }}>
+   269→                  NOUVEAUTÉS
+   270→                </span>
+   271→              </div>
+   272→              <p className="text-xs font-medium text-white mb-3 leading-relaxed">
+   273→                Découvrez les derniers MVPs disponibles sur le marketplace !
+   274→              </p>
+   275→              <span 
+   276→                className="inline-flex items-center gap-1 text-xs font-semibold"
+   277→                style={{ color: "#D4AF37" }}
+   278→              >
+   279→                Explorer
+   280→                <svg 
+   281→                  className="w-3.5 h-3.5" 
+   282→                  fill="none" 
+   283→                  stroke="currentColor" 
+   284→                  viewBox="0 0 24 24"
+   285→                >
+   286→                  <path 
+   287→                    strokeLinecap="round" 
+   288→                    strokeLinejoin="round" 
+   289→                    strokeWidth={2} 
+   290→                    d="M17 8l4 4m0 0l-4 4m4-4H3" 
+   291→                  />
+   292→                </svg>
+   293→              </span>
+   294→            </Link>
+   295→          </div>
+   296→        )}
+   297→
+   298→        {/* Logout Button */}
+   299→        <div 
+   300→          className="flex-shrink-0 px-5 pb-4"
+   301→          style={{ borderTop: "1px solid rgba(212,175,55,0.08)" }}
+   302→        >
+   303→          <button
+   304→            className="w-full flex items-center gap-3 py-2.5 text-[13px] font-medium transition-all duration-200 hover:text-[#EF4444]"
+   305→            style={{ color: "#6B7280" }}
+   306→          >
+   307→            <span className="text-base">🚪</span>
+   308→            {isOpen && <span>Se déconnecter</span>}
+   309→          </button>
+   310→        </div>
+   311→      </aside>
+   312→
+   313→      {/* Inline Styles for Sidebar */}
+   314→      <style jsx global>{`
+   315→        .sidebar-overlay {
+   316→          background: rgba(0, 0, 0, 0.6);
+   317→          backdrop-filter: blur(4px);
+   318→        }
+   319→        
+   320→        .sidebar-nav-item:hover:not(:has(.sidebar-nav-item.active)) {
+   321→          background: rgba(212, 175, 55, 0.08) !important;
+   322→          border-left-color: rgba(212, 175, 55, 0.5) !important;
+   323→        }
+   324→        
+   325→        .sidebar-nav-item:hover .sidebar-icon {
+   326→          filter: none !important;
+   327→          opacity: 1 !important;
+   328→        }
+   329→        
+   330→        .sidebar-logo {
+   331→          transition: transform 0.3s ease;
+   332→        }
+   333→        
+   334→        .sidebar-nav-item:hover .sidebar-logo {
+   335→          transform: rotate(15deg) scale(1.1);
+   336→        }
+   337→        
+   338→        .marketplace-cta:hover {
+   339→          background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.08) 100%) !important;
+   340→          border-color: rgba(212, 175, 55, 0.4) !important;
+   341→          box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15) !important;
+   342→        }
+   343→        
+   344→        /* Scrollbar hide */
+   345→        .scrollbar-hide::-webkit-scrollbar {
+   346→          display: none;
+   347→        }
+   348→        .scrollbar-hide {
+   349→          -ms-overflow-style: none;
+   350→          scrollbar-width: none;
+   351→        }
+   352→
+   353→        /* Animation for badges */
+   354→        @keyframes badge-pulse {
+   355→          0%, 100% { transform: scale(1); }
+   356→          50% { transform: scale(1.05); }
+   357→        }
+   358→        
+   359→        .sidebar-badge {
+   360→          animation: badge-pulse 2s ease-in-out infinite;
+   361→        }
+   362→      `}</style>
+   363→    </>
+   364→  );
+   365→}
+   366→
+   367→/* ═══════════════════════════════════════════════════════════════
+   368→   MOBILE BOTTOM NAVIGATION
+   369→   For small screens - shows essential navigation
+   370→   ═══════════════════════════════════════════════════════════════ */
+   371→const mobileNavItems = [
+   372→  { id: "overview", label: "Accueil", icon: "🏠", href: "/dashboard" },
+   373→  { id: "marketplace", label: "Marketplace", icon: "🛒", href: "/marketplace" },
+   374→  { id: "orders", label: "Commandes", icon: "📄", href: "/dashboard/orders" },
+   375→  { id: "profile", label: "Profil", icon: "👤", href: "/dashboard/profile" },
+   376→];
+   377→
+   378→interface MobileNavProps {
+   379→  currentPath?: string;
+   380→}
+   381→
+   382→export function MobileBottomNav({ currentPath = "" }: MobileNavProps) {
+   383→  return (
+   384→    <nav 
+   385→      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 mobile-bottom-nav"
+   386→      style={{
+   387→        background: "rgba(10, 10, 10, 0.95)",
+   388→        borderTop: "1px solid rgba(212,175,55,0.08)",
+   389→        backdropFilter: "blur(12px)",
+   390→        paddingBottom: "env(safe-area-inset-bottom)",
+   391→      }}
+   392→    >
+   393→      <div className="flex items-center justify-around px-2 py-2">
+   394→        {mobileNavItems.map((item) => {
+   395→          const isActive = currentPath === item.href || 
+   396→            (item.href !== "/dashboard" && currentPath?.startsWith(item.href));
+   397→          
+   398→          return (
+   399→            <Link
+   400→              key={item.id}
+   401→              href={item.href}
+   402→              className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-200 ${
+   403→                isActive ? "mobile-nav-active" : ""
+   404→              }`}
+   405→              style={{
+   406→                color: isActive ? "#D4AF37" : "#6B7280",
+   407→                background: isActive ? "rgba(212,175,55,0.1)" : "transparent",
+   408→              }}
+   409→            >
+   410→              <span className="text-xl">{item.icon}</span>
+   411→              <span className="text-[9px] font-medium">{item.label}</span>
+   412→              {isActive && (
+   413→                <span 
+   414→                  className="w-1 h-1 rounded-full mt-0.5"
+   415→                  style={{ background: "#D4AF37" }}
+   416→                />
+   417→              )}
+   418→            </Link>
+   419→          );
+   420→        })}
+   421→      </div>
+   422→
+   423→      <style jsx global>{`
+   424→        .mobile-bottom-nav a:hover {
+   425→          color: #D4AF37 !important;
+   426→          background: rgba(212, 175, 55, 0.05) !important;
+   427→        }
+   428→        
+   429→        .mobile-nav-active {
+   430→          box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+   431→        }
+   432→      `}</style>
+   433→    </nav>
+   434→  );
+   435→}
+   436→
+   437→/* ═══════════════════════════════════════════════════════════════
+   438→   MARKETPLACE PROMO CARD COMPONENT
+   439→   To be used in dashboard main content area
+   440→   ═══════════════════════════════════════════════════════════════ */
+   441→interface MarketplacePromoCardProps {
+   442→  className?: string;
+   443→}
+   444→
+   445→export function MarketplacePromoCard({ className = "" }: MarketplacePromoCardProps) {
+   446→  return (
+   447→    <Link
+   448→      href="/marketplace"
+   449→      className={`block relative overflow-hidden rounded-xl transition-all duration-500 hover:scale-[1.02] marketplace-promo-card ${className}`}
+   450→      style={{
+   451→        background: "linear-gradient(135deg, #1a1510 0%, #0d0d0d 50%, #12140f 100%)",
+   452→        border: "1px solid rgba(212,175,55,0.15)",
+   453→      }}
+   454→    >
+   455→      {/* Background Pattern */}
+   456→      <div 
+   457→        className="absolute inset-0 opacity-5"
+   458→        style={{
+   459→          backgroundImage: `
+   460→            radial-gradient(circle at 20% 80%, rgba(212,175,55,0.3) 0%, transparent 50%),
+   461→            radial-gradient(circle at 80% 20%, rgba(16,185,129,0.2) 0%, transparent 50%)
+   462→          `,
+   463→        }}
+   464→      />
+   465→      
+   466→      {/* African Pattern Accent */}
+   467→      <div className="absolute top-0 right-0 w-32 h-full opacity-8 overflow-hidden">
+   468→        <svg viewBox="0 0 120 200" fill="none" className="h-full" preserveAspectRatio="xMidYMid slice">
+   469→          <defs>
+   470→            <pattern id="african-pattern" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+   471→              <path d="M15 0 L30 15 L15 30 L0 15 Z" stroke="#D4AF37" strokeWidth="0.5" fill="none" opacity="0.3"/>
+   472→              <circle cx="15" cy="15" r="3" stroke="#D4AF37" strokeWidth="0.3" fill="none" opacity="0.2"/>
+   473→            </pattern>
+   474→          </defs>
+   475→          <rect width="120" height="200" fill="url(#african-pattern)" />
+   476→        </svg>
+   477→      </div>
+   478→
+   479→      {/* Content */}
+   480→      <div className="relative p-6 md:p-8">
+   481→        <div className="flex items-start justify-between mb-4">
+   482→          <div 
+   483→            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl promo-icon-wrapper"
+   484→            style={{
+   485→              background: "linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05))",
+   486→              border: "1px solid rgba(212,175,55,0.3)",
+   487→            }}
+   488→          >
+   489→            🛒
+   490→          </div>
+   491→          <span 
+   492→            className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase promo-badge"
+   493→            style={{
+   494→              background: "linear-gradient(135deg, #D4AF37, #B8923E)",
+   495→              color: "#0a0a0a",
+   496→            }}
+   497→          >
+   498→            MARKETPLACE
+   499→          </span>
+   500→        </div>
+   501→
+   502→        <h3 
+   503→          className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight promo-title"
+   504→          style={{ fontFamily: "var(--font-heading, system-ui)" }}
+   505→        >
+   506→          Découvrir le{" "}
+   507→          <span 
+   508→            className="bg-clip-text text-transparent"
+   509→            style={{ backgroundImage: "linear-gradient(135deg, #D4AF37, #F5D77A)" }}
+   510→          >
+   511→            Marketplace
+   512→          </span>
+   513→        </h3>
+   514→
+   515→        <p className="text-sm md:text-base mb-6 leading-relaxed promo-description" style={{ color: "#9CA3AF" }}>
+   516→          Explorez notre catalogue de MVPs prêts à l&apos;emploi. Des solutions innovantes 
+   517→          pour accélérer votre croissance.
+   518→        </p>
+   519→
+   520→        {/* Stats */}
+   521→        <div className="flex gap-6 mb-6 promo-stats">
+   522→          <div>
+   523→            <span className="block text-2xl font-bold" style={{ color: "#D4AF37" }}>12+</span>
+   524→            <span className="text-[11px]" style={{ color: "#6B7280" }}>MVPs disponibles</span>
+   525→          </div>
+   526→          <div>
+   527→            <span className="block text-2xl font-bold" style={{ color: "#10B981" }}>50+</span>
+   528→            <span className="text-[11px]" style={{ color: "#6B7280" }}>Clients satisfaits</span>
+   529→          </div>
+   530→        </div>
+   531→
+   532→        {/* CTA Button */}
+   533→        <div 
+   534→          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 promo-cta-button"
+   535→          style={{
+   536→            background: "linear-gradient(135deg, #D4AF37, #B8923E)",
+   537→            color: "#0a0a0a",
+   538→            boxShadow: "0 4px 20px rgba(212,175,55,0.3)",
+   539→          }}
+   540→        >
+   541→          Explorer les MVPs
+   542→          <svg 
+   543→            className="w-4 h-4" 
+   544→            fill="none" 
+   545→            stroke="currentColor" 
+   546→            viewBox="0 0 24 24"
+   547→          >
+   548→            <path 
+   549→              strokeLinecap="round" 
+   550→              strokeLinejoin="round" 
+   551→              strokeWidth={2.5} 
+   552→              d="M17 8l4 4m0 0l-4 4m4-4H3" 
+   553→            />
+   554→          </svg>
+   555→        </div>
+   556→      </div>
+   557→
+   558→      <style jsx global>{`
+   559→        .marketplace-promo-card:hover {
+   560→          border-color: rgba(212, 175, 55, 0.35) !important;
+   561→          box-shadow: 
+   562→            0 10px 40px rgba(0, 0, 0, 0.3),
+   563→            0 0 60px rgba(212, 175, 55, 0.08) !important;
+   564→        }
+   565→        
+   566→        .marketplace-promo-card:hover .promo-icon-wrapper {
+   567→          transform: scale(1.1) rotate(-5deg);
+   568→          transition: transform 0.3s ease;
+   569→        }
+   570→        
+   571→        .marketplace-promo-card:hover .promo-cta-button {
+   572→          transform: translateX(4px);
+   573→          box-shadow: 0 6px 25px rgba(212,175,55,0.4) !important;
+   574→        }
+   575→        
+   576→        .promo-icon-wrapper {
+   577→          transition: transform 0.3s ease;
+   578→        }
+   579→        
+   580→        .promo-cta-button {
+   581→          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   582→        }
+   583→      `}</style>
+   584→    </Link>
+   585→  );
+   586→}
+   587→
+   588→/* ═══════════════════════════════════════════════════════════════
+   589→   HEADER WITH MARKETPLACE LINK
+   590→   Enhanced header with prominent marketplace navigation
+   591→   ═══════════════════════════════════════════════════════════════ */
+   592→interface DashboardHeaderProps {
+   593→  onMenuClick: () => void;
+   594→  userName?: string;
+   595→  userRole?: string;
+   596→  userInitials?: string;
+   597→}
+   598→
+   599→export function DashboardHeader({ 
+   600→  onMenuClick, 
+   601→  userName = "Jean Paul K.", 
+   602→  userRole = "Entrepreneur",
+   603→  userInitials = "JP"
+   604→}: DashboardHeaderProps) {
+   605→  return (
+   606→    <header
+   607→      className="flex items-center justify-between h-16 px-4 md:px-6 flex-shrink-0 dashboard-header"
+   608→      style={{
+   609→        background: "rgba(10,10,10,0.95)",
+   610→        borderBottom: "1px solid rgba(212,175,55,0.08)",
+   611→        backdropFilter: "blur(12px)",
+   612→      }}
+   613→    >
+   614→      {/* Left — Hamburger + Search + Marketplace Link */}
+   615→      <div className="flex items-center gap-3 flex-1">
+   616→        <button
+   617→          onClick={onMenuClick}
+   618→          className="lg:hidden p-2 rounded-md hover:bg-white/5 transition-colors"
+   619→          style={{ color: "#9CA3AF" }}
+   620→          aria-label="Toggle menu"
+   621→        >
+   622→          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   623→            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+   624→          </svg>
+   625→        </button>
+   626→
+   627→        {/* Search */}
+   628→        <div className="relative hidden sm:block max-w-md flex-1">
+   629→          <svg 
+   630→            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" 
+   631→            fill="none" 
+   632→            stroke="#6B7280" 
+   633→            viewBox="0 0 24 24"
+   634→          >
+   635→            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+   636→          </svg>
+   637→          <input
+   638→            type="text"
+   639→            placeholder="Rechercher un MVP, une commande..."
+   640→            className="w-full pl-10 pr-10 py-2 rounded-lg text-sm outline-none search-input"
+   641→            style={{
+   642→              background: "#1a1a1a",
+   643→              border: "1px solid rgba(212,175,55,0.08)",
+   644→              color: "#FFFFFF",
+   645→            }}
+   646→          />
+   647→          <span 
+   648→            className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded"
+   649→            style={{ background: "#1f1f1f", color: "#6B7280", border: "1px solid #333" }}
+   650→          >
+   651→            ⌘K
+   652→          </span>
+   653→        </div>
+   654→      </div>
+   655→
+   656→      {/* Center — Marketplace Quick Link (visible on larger screens) */}
+   657→      <Link
+   658→        href="/marketplace"
+   659→        className="hidden xl:flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 marketplace-header-link"
+   660→        style={{
+   661→          color: "#D4AF37",
+   662→          background: "rgba(212,175,55,0.08)",
+   663→          border: "1px solid rgba(212,175,55,0.2)",
+   664→        }}
+   665→      >
+   666→        <span>🛒</span>
+   667→        <span>Parcourir le Marketplace</span>
+   668→        <svg 
+   669→          className="w-4 h-4" 
+   670→          fill="none" 
+   671→          stroke="currentColor" 
+   672→          viewBox="0 0 24 24"
+   673→        >
+   674→          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+   675→        </svg>
+   676→      </Link>
+   677→
+   678→      {/* Right — Notifications + Profile */}
+   679→      <div className="flex items-center gap-4">
+   680→        {/* Notifications */}
+   681→        <button 
+   682→          className="relative p-2 rounded-lg hover:bg-white/5 transition-colors notification-btn"
+   683→          style={{ color: "#9CA3AF" }}
+   684→          aria-label="Notifications"
+   685→        >
+   686→          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   687→            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+   688→          </svg>
+   689→          <span 
+   690→            className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center notification-badge"
+   691→            style={{ background: "#F59E0B", color: "#0a0a0a" }}
+   692→          >
+   693→            2
+   694→          </span>
+   695→        </button>
+   696→
+   697→        {/* Profile Dropdown */}
+   698→        <button 
+   699→          className="flex items-center gap-3 pl-3 ml-1 profile-btn"
+   700→          style={{ borderLeft: "1px solid rgba(212,175,55,0.08)" }}
+   701→          aria-label="Profile menu"
+   702→        >
+   703→          <div 
+   704→            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+   705→            style={{ 
+   706→              background: "linear-gradient(135deg, #D4AF37, #B8923E)", 
+   707→              color: "#0a0a0a" 
+   708→            }}
+   709→          >
+   710→            {userInitials}
+   711→          </div>
+   712→          <div className="hidden md:block text-left">
+   713→            <span className="block text-xs font-semibold text-white leading-tight">{userName}</span>
+   714→            <span className="block text-[10px]" style={{ color: "#6B7280" }}>{userRole}</span>
+   715→          </div>
+   716→          <svg className="w-3.5 h-3.5 hidden md:block" fill="none" stroke="#6B7280" viewBox="0 0 24 24">
+   717→            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+   718→          </svg>
+   719→        </button>
+   720→      </div>
+   721→
+   722→      <style jsx global>{`
+   723→        .marketplace-header-link:hover {
+   724→          background: rgba(212, 175, 55, 0.15) !important;
+   725→          border-color: rgba(212, 175, 55, 0.4) !important;
+   726→          transform: translateY(-1px);
+   727→        }
+   728→        
+   729→        .search-input:focus {
+   730→          border-color: rgba(212, 175, 55, 0.3) !important;
+   731→          box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1) !important;
+   732→        }
+   733→        
+   734→        .notification-btn:hover {
+   735→          color: #D4AF37 !important;
+   736→        }
+   737→        
+   738→        .notification-badge {
+   739→          animation: pulse-badge 2s infinite;
+   740→        }
+   741→        
+   742→        @keyframes pulse-badge {
+   743→          0%, 100% { transform: scale(1); }
+   744→          50% { transform: scale(1.1); }
+   745→        }
+   746→        
+   747→        .profile-btn:hover {
+   748→          opacity: 0.9;
+   749→        }
+   750→      `}</style>
+   751→    </header>
+   752→  );
+   753→}
+   754→
+   755→// Default export for backward compatibility
+   756→export default DashboardSidebar;
+   757→
