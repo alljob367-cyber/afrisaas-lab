@@ -1,0 +1,754 @@
+     1→// ═══════════════════════════════════════════════════════════════
+     2→// AFRISAAS LAB — Data Layer
+     3→// Marketplace de MVP et Solutions Digitales pour l'Afrique
+     4→// ═══════════════════════════════════════════════════════════════
+     5→
+     6→// — Navigation —
+     7→export const navLinks = [
+     8→  { label: "Accueil", href: "#" },
+     9→  { label: "MVP", href: "#mvp" },
+    10→  { label: "Secteurs", href: "#secteurs" },
+    11→  { label: "Solutions IA", href: "#ai-lab" },
+    12→  { label: "Services", href: "#services" },
+    13→  { label: "Tarifs", href: "#tarifs" },
+    14→  { label: "À propos", href: "#about" },
+    15→];
+    16→
+    17→export const brandData = {
+    18→  name: "AFRISAAS LAB",
+    19→  tagline: "Un Problème. Une Solution. Un MVP.",
+    20→  subtagline: "Built in Africa. Ready for the world.",
+    21→  cta: "S'inscrire",
+    22→  promise: "Chaque MVP est conçu pour résoudre un vrai problème africain — pas un clone de Silicon Valley.",
+    23→  philosophy: "Nous construisons avec l'Afrique, pour l'Afrique. Solutions en FCFA, support local, déploiement rapide.",
+    24→};
+    25→
+    26→// — Hero —
+    27→export const heroData = {
+    28→  headingLine1: "UN PROBLÈME.",
+    29→  headingLine2: "UNE SOLUTION.",
+    30→  headingLine3: "UN MVP.",
+    31→  subtitle:
+    32→    "Découvrez des solutions digitales prêtes à tester, acheter ou personnaliser pour développer votre activité.",
+    33→  searchPlaceholder: "Ex. Je veux gérer mon restaurant, mes clients, mes ventes...",
+    34→  popularSearches: ["Restaurant", "CRM", "WhatsApp", "École", "Immobilier", "Commerce"],
+    35→  stats: [
+    36→    { icon: "🏢", value: "+50", label: "MVP disponibles" },
+    37→    { icon: "👥", value: "+300", label: "Entrepreneurs équipés" },
+    38→    { icon: "📊", value: "+15", label: "Secteurs couverts" },
+    39→    { icon: "✅", value: "+98%", label: "Clients satisfaits" },
+    40→  ],
+    41→  saasNodes: [
+    42→    { id: "crm", x: 15, y: 20, label: "CRM", color: "#FF6B35" },
+    43→    { id: "stock", x: 30, y: 60, label: "Stock", color: "#00D4AA" },
+    44→    { id: "restaurant", x: 50, y: 15, label: "Restaurant", color: "#FFB800" },
+    45→    { id: "hotel", x: 70, y: 70, label: "Hôtel", color: "#7C5CFC" },
+    46→    { id: "whatsapp", x: 85, y: 35, label: "WhatsApp", color: "#25D366" },
+    47→    { id: "finance", x: 45, y: 80, label: "Finance", color: "#FF4757" },
+    48→    { id: "ecole", x: 65, y: 25, label: "École", color: "#3498DB" },
+    49→    { id: "couture", x: 20, y: 75, label: "Couture", color: "#E91E8B" },
+    50→  ],
+    51→  connections: [
+    52→    ["crm", "stock"],
+    53→    ["crm", "whatsapp"],
+    54→    ["stock", "restaurant"],
+    55→    ["restaurant", "hotel"],
+    56→    ["hotel", "finance"],
+    57→    ["finance", "ecole"],
+    58→    ["ecole", "whatsapp"],
+    59→    ["couture", "stock"],
+    60→    ["couture", "crm"],
+    61→    ["whatsapp", "crm"],
+    62→    ["ecole", "stock"],
+    63→    ["hotel", "whatsapp"],
+    64→  ],
+    65→  tags: ["Next.js", "TypeScript", "Prisma", "IA", "FCFA", "WhatsApp", "PWA", "Chariow"],
+    66→  chain: ["IDÉE", "PROTOTYPE", "MVP", "BUSINESS"],
+    67→  primaryCta: { label: "Explorer les MVP", href: "#mvp" },
+    68→  secondaryCta: { label: "Demander un devis", href: "#contact" },
+    69→};
+    70→
+    71→// — Sectors —
+    72→export const sectors = [
+    73→  { icon: "🛒", label: "Commerce", count: 8 },
+    74→  { icon: "🍽️", label: "Restaurant", count: 6 },
+    75→  { icon: "🎓", label: "Éducation", count: 5 },
+    76→  { icon: "🏥", label: "Santé", count: 4 },
+    77→  { icon: "🏠", label: "Immobilier", count: 5 },
+    78→  { icon: "🚌", label: "Transport", count: 3 },
+    79→  { icon: "🌱", label: "Agriculture", count: 4 },
+    80→  { icon: "💰", label: "Finance", count: 6 },
+    81→  { icon: "🎨", label: "Artisanat", count: 3 },
+    82→  { icon: "⋯", label: "Voir plus", count: 0 },
+    83→];
+    84→
+    85→// — Popular MVPs —
+    86→export const popularMvps = [
+    87→  {
+    88→    slug: "restaurant-manager",
+    89→    title: "Restaurant Manager",
+    90→    description: "Gérez votre restaurant facilement",
+    91→    category: "Restaurant",
+    92→    price: "199 000",
+    93→    badge: "Populaire",
+    94→    badgeColor: "green",
+    95→    image: "/images/mvp-restaurant.png",
+    96→  },
+    97→  {
+    98→    slug: "whatsapp-crm",
+    99→    title: "WhatsApp CRM",
+   100→    description: "CRM intégré à WhatsApp",
+   101→    category: "CRM",
+   102→    price: "149 000",
+   103→    badge: "IA",
+   104→    badgeColor: "green",
+   105→    image: "/images/mvp-crm.png",
+   106→  },
+   107→  {
+   108→    slug: "ecole-manager",
+   109→    id: "ecole-manager",
+   110→    status: "live",
+   111→    title: "Ecole Manager",
+   112→    description: "Gestion complète d'établissements",
+   113→    category: "Éducation",
+   114→    price: "179 000",
+   115→    badge: "Populaire",
+   116→    badgeColor: "brown",
+   117→    image: "/images/mvp-ecole.png",
+   118→  },
+   119→  {
+   120→    slug: "immo-pro",
+   121→    title: "Immo Pro",
+   122→    description: "Gérez vos biens immobiliers",
+   123→    category: "Immobilier",
+   124→    price: "199 000",
+   125→    badge: "Nouveau",
+   126→    badgeColor: "blue",
+   127→    image: "/images/mvp-immo.png",
+   128→  },
+   129→  {
+   130→    slug: "finances-plus",
+   131→    id: "finances-plus",
+   132→    status: "development",
+   133→    title: "Finances Plus",
+   134→    description: "Comptabilité & gestion financière",
+   135→    category: "Finance",
+   136→    price: "199 000",
+   137→    badge: "IA",
+   138→    badgeColor: "green",
+   139→    image: "/images/mvp-finance.png",
+   140→  },
+   141→];
+   142→
+   143→// — Why Choose Us —
+   144→export const whyChooseUs = [
+   145→  {
+   146→    icon: "📦",
+   147→    title: "Solutions prêtes à l'emploi",
+   148→    description: "Des MVP testées et validées pour démarrer rapidement.",
+   149→  },
+   150→  {
+   151→    icon: "⚙️",
+   152→    title: "Personnalisation",
+   153→    description: "Nous adaptons chaque solution à vos besoins spécifiques.",
+   154→  },
+   155→  {
+   156→    icon: "⚛️",
+   157→    title: "Technologies modernes",
+   158→    description: "Des solutions performantes, sécurisées et évolutives.",
+   159→  },
+   160→  {
+   161→    icon: "🔒",
+   162→    title: "Paiement sécurisé",
+   163→    description: "Payez en toute sécurité via Chariow (mobile money, carte...).",
+   164→  },
+   165→  {
+   166→    icon: "🎧",
+   167→    title: "Support dédié",
+   168→    description: "Une équipe disponible pour vous accompagner.",
+   169→  },
+   170→];
+   171→
+   172→// — How It Works —
+   173→export const howItWorks = [
+   174→  {
+   175→    step: 1,
+   176→    icon: "🔍",
+   177→    title: "Trouvez votre solution",
+   178→    description: "Recherchez votre problème ou parcourez les catégories.",
+   179→  },
+   180→  {
+   181→    step: 2,
+   182→    icon: "🖥️",
+   183→    title: "Découvrez le MVP",
+   184→    description: "Explorez les fonctionnalités, regardez la démo.",
+   185→  },
+   186→  {
+   187→    step: 3,
+   188→    icon: "🛒",
+   189→    title: "Achetez ou demandez un devis",
+   190→    description: "Achetez directement ou demandez une personnalisation.",
+   191→  },
+   192→  {
+   193→    step: 4,
+   194→    icon: "🚀",
+   195→    title: "Utilisez et développez votre activité",
+   196→    description: "Recevez votre solution et faites croître votre business.",
+   197→  },
+   198→];
+   199→
+   200→// — AI Lab —
+   201→export const aiLabFeatures = [
+   202→  "Automatisation intelligente",
+   203→  "Chatbots & WhatsApp IA",
+   204→  "Analyse prédictive",
+   205→  "Intégrations avancées",
+   206→];
+   207→
+   208→// — Testimonials —
+   209→export const testimonials = [
+   210→  {
+   211→    name: "Jean Paul K.",
+   212→    role: "Restaurateur",
+   213→    text: "Grâce à Afrisaas Lab, j'ai pu digitaliser mon restaurant en quelques jours. Excellent support !",
+   214→    initials: "JP",
+   215→  },
+   216→  {
+   217→    name: "Aïcha M.",
+   218→    role: "Entrepreneure",
+   219→    text: "Le CRM WhatsApp a transformé ma relation client. Je le recommande fortement.",
+   220→    initials: "AM",
+   221→  },
+   222→  {
+   223→    name: "Kevin D.",
+   224→    role: "Directeur d'école",
+   225→    text: "Une équipe professionnelle, des solutions fiables et un suivi impeccable.",
+   226→    initials: "KD",
+   227→  },
+   228→  {
+   229→    name: "Fatou N.",
+   230→    role: "Commerçante",
+   231→    text: "Enfin des solutions adaptées à nos réalités africaines. Bravo à l'équipe !",
+   232→    initials: "FN",
+   233→  },
+   234→];
+   235→
+   236→// — CTA Final —
+   237→export const finalCta = {
+   238→  headline: "PRÊT À TRANSFORMER VOTRE IDÉE EN SUCCÈS ?",
+   239→  subtitle: "Rejoignez des centaines d'entrepreneurs qui nous font déjà confiance.",
+   240→  primaryButton: { label: "Parcourir les MVP", href: "#mvp" },
+   241→  secondaryButton: { label: "Demander un devis", href: "#contact" },
+   242→};
+   243→
+   244→// — Contact —
+   245→export const contactInfo = {
+   246→  email: "hello@afrisaas.lab",
+   247→  whatsapp: "#",
+   248→  linkedin: "#",
+   249→  github: "#",
+   250→  telegram: "#",
+   251→  location: "Afrique · Remote",
+   252→};
+   253→
+   254→// — Footer —
+   255→export const footerData = {
+   256→  brand: "AFRISAAS LAB",
+   257→  tagline: "Un Problème. Une Solution. Un MVP.",
+   258→  subtagline: "Built in Africa. Ready for the world.",
+   259→  quickLinks: [
+   260→    { label: "Accueil", href: "#" },
+   261→    { label: "MVP", href: "#mvp" },
+   262→    { label: "Secteurs", href: "#secteurs" },
+   263→    { label: "Solutions IA", href: "#ai-lab" },
+   264→  ],
+   265→  resourceLinks: [
+   266→    { label: "Services", href: "#services" },
+   267→    { label: "Tarifs", href: "#tarifs" },
+   268→    { label: "Contact", href: "#contact" },
+   269→  ],
+   270→  socials: [
+   271→    { label: "WhatsApp", href: "https://wa.me/", icon: "💬" },
+   272→    { label: "LinkedIn", href: "#", icon: "🔗" },
+   273→    { label: "GitHub", href: "#", icon: "🐙" },
+   274→    { label: "Telegram", href: "#", icon: "✈️" },
+   275→  ],
+   276→};
+   277→
+   278→// — About & Roles —
+   279→export const aboutData = {
+   280→  title: "À Propos d'AFRISAAS LAB",
+   281→  headline: "Né en Afrique, pensé pour le monde",
+   282→  subtitle: "Né en Afrique, pensé pour le monde",
+   283→  description:
+   284→    "AFRISAAS LAB est la première plateforme marketplace dédiée aux solutions MVP digitales pour les entreprises africaines. Nous croyons que chaque problème mérite une solution simple, accessible et abordable — en FCFA.",
+   285→  mission:
+   286→    "Démocratiser l'accès aux solutions digitales en Afrique en offrant des MVP prêts à l'emploi, personnalisables et payables en monnaie locale via Chariow.",
+   287→  chain: ["IDÉE", "PRODUIT", "BUSINESS"],
+   288→  stats: [
+   289→    { label: "MVP disponibles", value: "10+" },
+   290→    { label: "Secteurs couverts", value: "10" },
+   291→    { label: "Pays en Afrique de l'Ouest", value: "8" },
+   292→    { label: "Clients satisfaits", value: "500+" },
+   293→  ],
+   294→};
+   295→
+   296→export const roles = [
+   297→  {
+   298→    label: "Entrepreneur",
+   299→    icon: "🚀",
+   300→    description: "Lancez votre activité avec un MVP prêt en quelques jours, pas en mois.",
+   301→  },
+   302→  {
+   303→    label: "Gérant de Commerce",
+   304→    icon: "🏪",
+   305→    description: "Gérez votre stock, vos ventes et vos clients avec des outils adaptés.",
+   306→  },
+   307→  {
+   308→    label: "Restaurateur",
+   309→    icon: "🍽️",
+   310→    description: "Automatisez réservations, commandes et gestion de personnel.",
+   311→  },
+   312→  {
+   313→    label: "Hôtelier",
+   314→    icon: "🏨",
+   315→    description: "Pilotez vos réservations, tarifs et disponibilités en temps réel.",
+   316→  },
+   317→  {
+   318→    label: "Couturier",
+   319→    icon: "🧵",
+   320→    description: "Organisez vos commandes, mesures et livraisons simplement.",
+   321→  },
+   322→  {
+   323→    label: "Financier",
+   324→    icon: "💰",
+   325→    description: "Suivez vos flux financiers, tontines et prêts en toute sécurité.",
+   326→  },
+   327→];
+   328→
+   329→// — Africa Features —
+   330→export const africaFeatures = [
+   331→  {
+   332→    icon: "🌍",
+   333→    title: "Conçu pour le marché africain",
+   334→    description:
+   335→      "Chaque solution est pensée en partant des réalités locales : connectivité limitée, paiements mobile money, langues régionales et pratiques commerciales africaines.",
+   336→  },
+   337→  {
+   338→    icon: "💵",
+   339→    title: "Tarification en FCFA",
+   340→    description:
+   341→      "Tous nos prix sont exprimés en FCFA et adaptés au pouvoir d'achat local. Pas de conversion compliquée, pas de frais cachés en dollars.",
+   342→  },
+   343→  {
+   344→    icon: "📱",
+   345→    title: "Mobile-first & Offline-ready",
+   346→    description:
+   347→      "Nos MVP sont optimisés pour les connexions mobiles et fonctionnent en mode hors-ligne grâce au Progressive Web App, essentiel dans les zones à faible connectivité.",
+   348→  },
+   349→  {
+   350→    icon: "💬",
+   351→    title: "Intégration WhatsApp native",
+   352→    description:
+   353→      "WhatsApp est le canal de communication n°1 en Afrique. Nos solutions s'intègrent nativement avec WhatsApp Business pour la prise de commande, le support et les notifications.",
+   354→  },
+   355→  {
+   356→    icon: "🔐",
+   357→    title: "Paiement via Chariow",
+   358→    description:
+   359→      "Paiement sécurisé via Chariow, notre partenaire de paiement : Mobile Money (Orange, Wave, MTN), cartes bancaires, et virements locaux africains.",
+   360→  },
+   361→  {
+   362→    icon: "🤝",
+   363→    title: "Support local & communautaire",
+   364→    description:
+   365→      "Une équipe de support basée en Afrique francophone, disponible par WhatsApp, téléphone et email. Plus une communauté d'entrepreneurs pour s'entraider et partager les bonnes pratiques.",
+   366→  },
+   367→];
+   368→
+   369→// — AI Lab Experiments —
+   370→export const aiLabExperiments = [
+   371→  {
+   372→    icon: "🤖",
+   373→    title: "Chatbot WhatsApp Intelligent",
+   374→    description:
+   375→      "Un chatbot propulsé par l'IA qui répond automatiquement aux clients via WhatsApp 24h/24. Il gère les commandes, les FAQ et les rendez-vous, réduisant de 70% la charge de travail de votre équipe.",
+   376→    status: "Active",
+   377→  },
+   378→  {
+   379→    icon: "📊",
+   380→    title: "Analyse Prédictive des Ventes",
+   381→    description:
+   382→      "Modèle d'apprentissage automatique qui analyse vos historiques de ventes pour prédire les tendances de la semaine à venir. Idéal pour optimiser les stocks et anticiper les pics de demande dans le commerce africain.",
+   383→    status: "Testing",
+   384→  },
+   385→  {
+   386→    icon: "📄",
+   387→    title: "Reconnaissance de Documents",
+   388→    description:
+   389→      "Extracteur IA capable de lire et digitaliser les factures, reçus et pièces d'identité papier — un besoin crucial dans un contexte où la paperasse reste dominante en Afrique.",
+   390→    status: "Research",
+   391→  },
+   392→  {
+   393→    icon: "⚡",
+   394→    title: "Génération Automatique de Devis",
+   395→    description:
+   396→      "Système IA qui génère des devis personnalisés en quelques secondes à partir d'une description en langage naturel. Le client décrit son besoin, l'IA produit un devis complet avec tarification adaptée.",
+   397→    status: "Research",
+   398→  },
+   399→];
+   400→
+   401→// — Build Chain Steps —
+   402→export const buildChainSteps = [
+   403→  {
+   404→    step: "01",
+   405→    title: "Identification du Problème",
+   406→    description:
+   407→      "Nous commençons par comprendre votre problème métier réel. Chaque MVP naît d'un pain point concret identifié sur le terrain africain, pas d'une hypothèse de Silicon Valley.",
+   408→  },
+   409→  {
+   410→    step: "02",
+   411→    title: "Conception & Prototypage",
+   412→    description:
+   413→      "Notre équipe design crée des prototypes interactifs adaptés au contexte local : interfaces mobile-first, navigation intuitive et support multilingue (Français, Wolof, Lingala…).",
+   414→  },
+   415→  {
+   416→    step: "03",
+   417→    title: "Développement & Intégration IA",
+   418→    description:
+   419→      "Développement rapide en 2 à 4 semaines avec intégration de modules IA pertinents : chatbots, analyse prédictive, automatisation. Nous utilisons Next.js, Prisma et les dernières technologies cloud.",
+   420→  },
+   421→  {
+   422→    step: "04",
+   423→    title: "Déploiement & Itération",
+   424→    description:
+   425→      "Mise en production sur infrastructure cloud optimisée pour l'Afrique, avec monitoring en temps réel. Nous itérons rapidement selon vos retours utilisateurs pour garantir l'adoption et la satisfaction.",
+   426→  },
+   427→];
+   428→
+   429→// — Projects (Portfolio MVPs) —
+   430→export const projects = [
+   431→  {
+   432→    id: "restaurant-manager",
+   433→    status: "live",
+   434→    title: "Restaurant Manager Pro",
+   435→    category: "Restaurant",
+   436→    image: "/images/mvp-restaurant.png",
+   437→    description:
+   438→      "Solution complète de gestion restaurative : réservations en ligne, prise de commande WhatsApp, gestion du stock en temps réel, comptabilité simplifiée et rapport journalier. Adapté aux restaurants africains avec support multi-devises FCFA.",
+   439→    shortDescription: "Réservations, commandes, caisse — tout-en-un",
+   440→    tech: ["Next.js", "Prisma", "WhatsApp API", "Chariow"],
+   441→    link: "#mvp-restaurant",
+   442→    problem: "Les restaurateurs africains gèrent souvent leurs commandes et réservations sur papier ou WhatsApp de manière désorganisée, ce qui entraîne des erreurs de facturation, des pertes de stock et une mauvaise expérience client.",
+   443→    solution: "Restaurant Manager Pro unifie réservations, commandes, caisse et gestion de stock dans une seule interface mobile-first, avec prise de commande native via WhatsApp et paiements en FCFA via Chariow.",
+   444→    features: [
+   445→      "Réservations en ligne avec confirmation WhatsApp automatique",
+   446→      "Prise de commande et menu digital accessible par QR code",
+   447→      "Gestion du stock en temps réel avec alertes de réapprovisionnement",
+   448→      "Caisse enregistreuse et clôture journalière en FCFA",
+   449→      "Rapports quotidiens et hebdomadaires envoyés par WhatsApp",
+   450→      "Support multi-langues (Français, Wolof, Lingala)",
+   451→    ],
+   452→    aiCapabilities: [
+   453→      "Chatbot WhatsApp pour prise de commande automatique 24h/24",
+   454→      "Prédiction de la demande pour optimiser les achats alimentaires",
+   455→      "Analyse des avis clients pour suggestions de menu personnalisées",
+   456→    ],
+   457→    architecture: "Application Next.js déployée sur Vercel avec base PostgreSQL via Prisma ORM, intégration WhatsApp Business API pour les notifications et Chariow pour les paiements Mobile Money.",
+   458→    techStack: ["Next.js 14", "TypeScript", "Prisma ORM", "PostgreSQL", "WhatsApp Business API", "Chariow", "Vercel"],
+   459→  },
+   460→  {
+   461→    id: "whatsapp-crm",
+   462→    status: "live",
+   463→    title: "WhatsApp CRM Afrique",
+   464→    category: "CRM",
+   465→    image: "/images/mvp-crm.png",
+   466→    description:
+   467→      "CRM nativement intégré à WhatsApp pour gérer vos leads, clients et ventes depuis l'application la plus utilisée en Afrique. Automatisation des relances, segmentation intelligente et pipelines de vente visuels.",
+   468→    shortDescription: "Vendez et gérez vos clients via WhatsApp",
+   469→    tech: ["React", "Node.js", "WhatsApp Business API", "IA"],
+   470→    link: "#mvp-crm",
+   471→    problem: "Les entrepreneurs africains communiquent massivement via WhatsApp mais n'ont aucun outil structuré pour suivre leurs leads, relancer leurs clients et mesurer leurs performances commerciales.",
+   472→    solution: "WhatsApp CRM Afrique centralise toutes les conversations clients dans un pipeline de vente visuel, avec automatisation des relances, segmentation IA et rapports de performance directement accessibles depuis WhatsApp.",
+   473→    features: [
+   474→      "Pipeline de vente visuel avec étapes personnalisables",
+   475→      "Automatisation des relances et séquences de suivi",
+   476→      "Segmentation intelligente des contacts par comportement d'achat",
+   477→      "Modèles de messages WhatsApp prêts à l'emploi",
+   478→      "Tableau de bord commercial avec KPI en temps réel",
+   479→      "Import/export de contacts depuis Excel ou Google Sheets",
+   480→    ],
+   481→    aiCapabilities: [
+   482→      "Classification automatique des leads par intention d'achat",
+   483→      "Suggestions de réponses contextuelles pour les conversations WhatsApp",
+   484→      "Scoring prédictif des clients les plus susceptibles de convertir",
+   485→    ],
+   486→    architecture: "Application React avec backend Node.js, intégration native WhatsApp Business API via webhooks, base PostgreSQL pour le stockage des contacts et Redis pour le cache des conversations en temps réel.",
+   487→    techStack: ["React 18", "Node.js", "TypeScript", "PostgreSQL", "Redis", "WhatsApp Business API", "LangChain"],
+   488→  },
+   489→  {
+   490→    id: "ecole-manager",
+   491→    status: "live",
+   492→    title: "Ecole Manager",
+   493→    category: "Éducation",
+   494→    image: "/images/mvp-ecole.png",
+   495→    description:
+   496→      "Gestion complète d'établissements scolaires africains : inscriptions, notes, emplois du temps, paiement des frais scolaires via Mobile Money, communication parents-professeurs par WhatsApp.",
+   497→    shortDescription: "Notes, emploi du temps, présence scolaire",
+   498→    tech: ["Next.js", "PostgreSQL", "Mobile Money API", "Tailwind"],
+   499→    link: "#mvp-ecole",
+   500→    problem: "Les établissements scolaires africains utilisent encore des cahiers et fichiers papier pour gérer les inscriptions, les notes et les présences, rendant le suivi des élèves et la communication avec les parents lents et sujets aux erreurs.",
+   501→    solution: "Ecole Manager digitalise l'ensemble du cycle scolaire — de l'inscription à la délivrance des bulletins — avec paiement des frais via Mobile Money et communication parents-professeurs automatisée par WhatsApp.",
+   502→    features: [
+   503→      "Gestion des inscriptions et dossiers élèves en ligne",
+   504→      "Saisie et calcul automatique des notes et moyennes",
+   505→      "Emploi du temps et suivi de présence en temps réel",
+   506→      "Paiement des frais scolaires via Mobile Money (Orange, Wave, MTN)",
+   507→      "Bulletins scolaires générés automatiquement en PDF",
+   508→      "Canal WhatsApp pour communications parents-professeurs",
+   509→    ],
+   510→    aiCapabilities: [
+   511→      "Détection automatique des élèves à risque de décrochage scolaire",
+   512→      "Génération de bulletins personnalisés avec commentaires IA",
+   513→      "Analyse prédictive des tendances de paiement des frais scolaires",
+   514→    ],
+   515→    architecture: "Application Next.js avec base PostgreSQL, intégration APIs Mobile Money (Orange, Wave, MTN) pour les paiements et WhatsApp Business API pour les notifications automatiques aux parents.",
+   516→    techStack: ["Next.js 14", "TypeScript", "PostgreSQL", "Prisma ORM", "Tailwind CSS", "Mobile Money APIs", "WhatsApp Business API"],
+   517→  },
+   518→  {
+   519→    id: "immo-pro",
+   520→    status: "development",
+   521→    title: "Immo Pro Afrique",
+   522→    category: "Immobilier",
+   523→    image: "/images/mvp-immo.png",
+   524→    description:
+   525→      "Plateforme de gestion immobilière pensée pour l'Afrique : gestion des loyers en FCFA, suivi des baux, visites virtuelles, paiement des charges via Chariow et alertes WhatsApp pour les échéances.",
+   526→    shortDescription: "Biens, locataires, baux en FCFA",
+   527→    tech: ["Next.js", "Prisma", "Chariow", "Google Maps"],
+   528→    link: "#mvp-immo",
+   529→    problem: "Les propriétaires et agences immobilières africaines manquent d'outils adaptés pour gérer leurs biens, suivre les paiements de loyers en FCFA et relancer les locataires en retard, souvent recourus à des carnets manuels.",
+   530→    solution: "Immo Pro Afrique offre une gestion immobilière complète avec suivi des loyers en FCFA, relances automatisées via WhatsApp, paiement des charges via Chariow et visites virtuelles des biens.",
+   531→    features: [
+   532→      "Gestion des biens avec photos, descriptions et visites virtuelles",
+   533→      "Suivi des baux, loyers et charges en FCFA",
+   534→      "Relances automatiques via WhatsApp pour les retardataires",
+   535→      "Paiement des loyers via Chariow (Mobile Money & carte)",
+   536→      "Calendrier des échéances et alertes de fin de bail",
+   537→      "Carte interactive des biens avec Google Maps",
+   538→    ],
+   539→    aiCapabilities: [
+   540→      "Estimation automatique des loyers basée sur le marché local",
+   541→      "Prédiction des risques d'impayés par profil de locataire",
+   542→      "Génération de contrats de bail personnalisés par IA",
+   543→    ],
+   544→    architecture: "Application Next.js avec Prisma ORM sur PostgreSQL, intégration Chariow pour les paiements, Google Maps pour la cartographie et WhatsApp Business API pour les relances locatives.",
+   545→    techStack: ["Next.js 14", "TypeScript", "Prisma ORM", "PostgreSQL", "Chariow", "Google Maps API", "WhatsApp Business API"],
+   546→  },
+   547→  {
+   548→    id: "finances-plus",
+   549→    status: "development",
+   550→    title: "Finances Plus",
+   551→    category: "Finance",
+   552→    image: "/images/mvp-finance.png",
+   553→    description:
+   554→      "Comptabilité et gestion financière adaptée aux PME africaines : suivi des flux FCFA, gestion des tontines, rapprochement bancaire local, déclarations fiscales simplifiées et tableaux de bord en temps réel.",
+   555→    shortDescription: "Tontines, prêts, épargne communautaire",
+   556→    tech: ["React", "Node.js", "IA Prédictive", "PostgreSQL"],
+   557→    link: "#mvp-finance",
+   558→    problem: "Les PME africaines et les organisateurs de tontines manquent d'outils de comptabilité adaptés au contexte local — les solutions occidentales ne gèrent ni les tontines, ni les monnaies FCFA, ni les spécificités fiscales africaines.",
+   559→    solution: "Finances Plus propose une comptabilité en FCFA avec gestion native des tontines et épargne communautaire, rapprochement bancaire local et déclarations fiscales simplifiées pour les régimes africains.",
+   560→    features: [
+   561→      "Comptabilité simplifiée en FCFA avec tenue de livres automatique",
+   562→      "Gestion des tontines et épargne communautaire",
+   563→      "Rapprochement bancaire avec banques locales africaines",
+   564→      "Déclarations fiscales pré-remplies selon le régime OHADA",
+   565→      "Tableaux de bord financiers en temps réel",
+   566→      "Export des rapports en PDF et envoi par WhatsApp",
+   567→    ],
+   568→    aiCapabilities: [
+   569→      "Analyse prédictive des flux de trésorerie à 30 jours",
+   570→      "Détection automatique d'anomalies et risques de fraude",
+   571→      "Classification intelligente des transactions comptables",
+   572→    ],
+   573→    architecture: "Application React avec backend Node.js et PostgreSQL, modèles IA prédictifs via TensorFlow.js pour l'analyse de trésorerie, et intégration APIs bancaires locales pour le rapprochement.",
+   574→    techStack: ["React 18", "Node.js", "TypeScript", "PostgreSQL", "TensorFlow.js", "LangChain", "Redis"],
+   575→  },
+   576→  {
+   577→    id: "marche-digital",
+   578→    status: "development",
+   579→    title: "Marché Digital",
+   580→    category: "Commerce",
+   581→    image: "/images/mvp-commerce.png",
+   582→    description:
+   583→      "Vitrine digitale et marketplace pour commerçants africains : catalogue produits, prise de commande WhatsApp, livraison intégrée, paiement Mobile Money et gestion du stock avec alertes de réapprovisionnement.",
+   584→    shortDescription: "E-commerce africain avec Chariow",
+   585→    tech: ["Next.js", "Stripe/Chariow", "WhatsApp API", "PWA"],
+   586→    link: "#mvp-commerce",
+   587→    problem: "Les commerçants africains vendent principalement via WhatsApp ou en boutique physique sans présence en ligne structurée, limitant leur reach à leur cercle de contacts et rendant la gestion des commandes et livraisons chaotique.",
+   588→    solution: "Marché Digital crée une vitrine digitale professionnelle en quelques clics avec catalogue produits, prise de commande WhatsApp, paiement Mobile Money via Chariow et suivi des livraisons intégré — le tout en PWA hors-ligne.",
+   589→    features: [
+   590→      "Création de vitrine digitale avec catalogue produits illimité",
+   591→      "Prise de commande et paiement via WhatsApp + Chariow",
+   592→      "Gestion des livraisons avec suivi en temps réel",
+   593→      "Paiement Mobile Money (Orange, Wave, MTN) et carte bancaire",
+   594→      "Alertes de réapprovisionnement automatiques",
+   595→      "Fonctionnement hors-ligne en mode PWA",
+   596→    ],
+   597→    aiCapabilities: [
+   598→      "Recommandations de produits personnalisées par profil client",
+   599→      "Chatbot WhatsApp pour prise de commande et FAQ automatiques",
+   600→      "Optimisation IA des prix selon la demande et la concurrence locale",
+   601→    ],
+   602→    architecture: "PWA Next.js déployée sur Vercel avec service worker pour le mode hors-ligne, backend Prisma sur PostgreSQL, intégration Chariow et APIs Mobile Money pour les paiements, et WhatsApp Business API pour les commandes.",
+   603→    techStack: ["Next.js 14", "TypeScript", "Prisma ORM", "PostgreSQL", "PWA", "Chariow", "WhatsApp Business API"],
+   604→  },
+   605→];
+   606→
+   607→// — Process Steps —
+   608→export const processSteps = [
+   609→  {
+   610→    number: "01",
+   611→    icon: "🔍",
+   612→    title: "Découverte & Analyse",
+   613→    description:
+   614→      "Nous échangeons avec vous pour comprendre votre activité, vos défis et vos objectifs. Cette phase de découverte permet de cadrer précisément le périmètre de votre MVP et d'identifier les intégrations nécessaires (WhatsApp, Mobile Money, etc.).",
+   615→  },
+   616→  {
+   617→    number: "02",
+   618→    icon: "🎨",
+   619→    title: "Design & Validation",
+   620→    description:
+   621→      "Nos designers créent des maquettes interactives adaptées à votre marché. Vous validez chaque écran avant le développement. Nous privilégions les interfaces mobile-first et les parcours utilisateurs simples et intuitifs.",
+   622→  },
+   623→  {
+   624→    number: "03",
+   625→    icon: "⚡",
+   626→    title: "Développement Agile",
+   627→    description:
+   628→      "Développement itératif en sprints de 1 semaine avec démonstration à chaque étape. Vous voyez votre MVP prendre forme en temps réel et pouvez ajuster les priorités. Délai moyen : 2 à 4 semaines pour un MVP complet.",
+   629→  },
+   630→  {
+   631→    number: "04",
+   632→    icon: "🚀",
+   633→    title: "Lancement & Accompagnement",
+   634→    description:
+   635→      "Mise en production, formation de votre équipe et support continu pendant 3 mois inclus. Nous assurons le suivi des métriques d'adoption et itérons rapidement pour maximiser l'impact de votre solution sur votre activité.",
+   636→  },
+   637→];
+   638→
+   639→// — Services —
+   640→export const services = [
+   641→  {
+   642→    icon: "🚀",
+   643→    title: "MVP sur Mesure",
+   644→    description:
+   645→      "De l'idée au produit lancé en 2 à 4 semaines. Nous construisons votre MVP complet avec design, développement, intégrations IA et déploiement. Idéal pour valider votre concept marché rapidement sans investir des mois de développement.",
+   646→    features: [
+   647→      "Design UI/UX mobile-first",
+   648→      "Développement full-stack",
+   649→      "Intégration IA & chatbots",
+   650→      "Déploiement & hébergement cloud",
+   651→    ],
+   652→    cta: "Demander un devis",
+   653→  },
+   654→  {
+   655→    icon: "🎨",
+   656→    title: "Personnalisation de MVP",
+   657→    description:
+   658→      "Choisissez un MVP existant dans notre catalogue et personnalisez-le selon vos besoins spécifiques. Modification du design, ajout de fonctionnalités, intégration de vos outils existants — tout est possible à un coût maîtrisé.",
+   659→    features: [
+   660→      "Adaptation design & branding",
+   661→      "Fonctionnalités sur mesure",
+   662→      "Intégrations tierces",
+   663→      "Migration de données existantes",
+   664→    ],
+   665→    cta: "Personnaliser un MVP",
+   666→  },
+   667→  {
+   668→    icon: "🤖",
+   669→    title: "Solutions IA & Automatisation",
+   670→    description:
+   671→      "Intégrez l'intelligence artificielle dans vos processus métier : chatbots WhatsApp, analyse prédictive, automatisation des tâches répétitives, extraction intelligente de documents. L'IA au service de la productivité africaine.",
+   672→    features: [
+   673→      "Chatbots WhatsApp intelligents",
+   674→      "Analyse prédictive & reporting",
+   675→      "OCR & reconnaissance de documents",
+   676→      "Automatisation des workflows",
+   677→    ],
+   678→    cta: "Explorer l'IA",
+   679→  },
+   680→  {
+   681→    icon: "🛠️",
+   682→    title: "Consulting & Audit Digital",
+   683→    description:
+   684→      "Notre équipe vous accompagne dans votre transformation digitale : audit de vos process existants, recommandations stratégiques, feuille de route technologique et formation de vos équipes aux outils digitaux.",
+   685→    features: [
+   686→      "Audit des processus métier",
+   687→      "Recommandations stratégiques",
+   688→      "Formation équipes & adoption",
+   689→      "Suivi & optimisation continue",
+   690→    ],
+   691→    cta: "Réserver un audit",
+   692→  },
+   693→];
+   694→
+   695→// — Tech Categories —
+   696→export const techCategories = [
+   697→  {
+   698→    category: "Frontend",
+   699→    techs: ["Next.js 14", "React 18", "TypeScript", "Tailwind CSS", "Framer Motion", "Radix UI"],
+   700→  },
+   701→  {
+   702→    category: "Backend & Base de données",
+   703→    techs: ["Node.js", "Prisma ORM", "PostgreSQL", "Redis", "tRPC", "REST API"],
+   704→  },
+   705→  {
+   706→    category: "IA & Automatisation",
+   707→    techs: ["OpenAI API", "LangChain", "TensorFlow.js", "WhatsApp Business API", "Webhooks"],
+   708→  },
+   709→  {
+   710→    category: "Infrastructure & Paiement",
+   711→    techs: ["Vercel", "Docker", "Chariow", "Mobile Money APIs", "PWA", "Cloudflare"],
+   712→  },
+   713→];
+   714→
+   715→// — Capabilities —
+   716→export const capabilities = [
+   717→  {
+   718→    icon: "📱",
+   719→    title: "Applications Web & Mobile",
+   720→    description:
+   721→      "Nous construisons des applications Progressive Web App (PWA) qui fonctionnent sur tous les appareils, en ligne comme hors-ligne, avec une expérience native. Optimisées pour les smartphones Android dominants en Afrique.",
+   722→  },
+   723→  {
+   724→    icon: "💬",
+   725→    title: "Solutions WhatsApp Business",
+   726→    description:
+   727→      "Intégration complète de l'écosystème WhatsApp : chatbots intelligents, CRM, prise de commande, notifications automatisées et support client. WhatsApp comme canal unique de relation client en Afrique.",
+   728→  },
+   729→  {
+   730→    icon: "🤖",
+   731→    title: "Produits IA & Machine Learning",
+   732→    description:
+   733→      "Chatbots conversationnels, analyse prédictive des ventes, reconnaissance de documents, recommandations personnalisées. Nos modèles IA sont fine-tunés pour les langues et contextes africains.",
+   734→  },
+   735→  {
+   736→    icon: "🏪",
+   737→    title: "Marketplace & E-commerce",
+   738→    description:
+   739→      "Plateformes de vente en ligne avec catalogue, panier, paiement Mobile Money/Chariow, gestion des livraisons et suivi des commandes. Solutions complètes du producteur au consommateur africain.",
+   740→  },
+   741→  {
+   742→    icon: "📊",
+   743→    title: "Dashboards & Analytics",
+   744→    description:
+   745→      "Tableaux de bord en temps réel avec visualisations de données, KPI métier, rapports automatisés et alertes WhatsApp. Transformez vos données brutes en décisions stratégiques éclairées.",
+   746→  },
+   747→  {
+   748→    icon: "🔗",
+   749→    title: "Intégrations & APIs",
+   750→    description:
+   751→      "Connexion avec les services essentiels en Afrique : Mobile Money (Orange, Wave, MTN), Chariow, WhatsApp, Google Workspace, et APIs métier personnalisées. L'interopérabilité au cœur de notre approche.",
+   752→  },
+   753→];
+   754→
