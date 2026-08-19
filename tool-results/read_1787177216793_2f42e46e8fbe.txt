@@ -1,0 +1,565 @@
+     1→"use client";
+     2→
+     3→import { useState } from "react";
+     4→import Link from "next/link";
+     5→import { useCart } from "@/lib/cart-store";
+     6→
+     7→// ═══════════════════════════════════════════════════════════════════
+     8→// Checkout — Récapitulatif de commande & Paiement Chariow
+     9→// ═══════════════════════════════════════════════════════════════════
+    10→
+    11→function formatPrice(amount: number): string {
+    12→  return amount.toLocaleString("fr-FR") + " FCFA";
+    13→}
+    14→
+    15→// ── Composant Spinner ──
+    16→function Spinner({ className = "" }: { className?: string }) {
+    17→  return (
+    18→    <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none">
+    19→      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+    20→      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+    21→    </svg>
+    22→  );
+    23→}
+    24→
+    25→// ── Badges de confiance ──
+    26→function TrustBadges() {
+    27→  return (
+    28→    <div className="grid grid-cols-3 gap-3 mt-6">
+    29→      <div className="text-center p-3 rounded-xl" style={{ background: "rgba(16, 185, 129, 0.06)", border: "1px solid rgba(16, 185, 129, 0.15)" }}>
+    30→        <svg className="w-6 h-6 mx-auto mb-1.5" style={{ color: "#3DA87E" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    31→          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+    32→        </svg>
+    33→        <p className="text-[10px] font-medium" style={{ color: "#3DA87E" }}>Paiement sécurisé</p>
+    34→      </div>
+    35→      <div className="text-center p-3 rounded-xl" style={{ background: "rgba(214, 168, 79, 0.06)", border: "1px solid rgba(214, 168, 79, 0.15)" }}>
+    36→        <svg className="w-6 h-6 mx-auto mb-1.5" style={{ color: "var(--gold)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    37→          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.106 1.43-.326 1.43-1.06V17.25M2.25 6.75a60.07 60.07 0 0115.797-2.101c.727-.106 1.43.326 1.43 1.06V8.25M3.75 21.75h16.5" />
+    38→        </svg>
+    39→        <p className="text-[10px] font-medium" style={{ color: "var(--gold)" }}>Prix en FCFA</p>
+    40→      </div>
+    41→      <div className="text-center p-3 rounded-xl" style={{ background: "rgba(99, 102, 241, 0.06)", border: "1px solid rgba(99, 102, 241, 0.15)" }}>
+    42→        <svg className="w-6 h-6 mx-auto mb-1.5" style={{ color: "#818CF8" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    43→          <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.88a6 6 0 01-5.7 0c-.41-.23-.81-.5-1.18-.82L3 18m6-6l9-9m-3 3l3 3" />
+    44→        </svg>
+    45→        <p className="text-[10px] font-medium" style={{ color: "#818CF8" }}>Livraison auto</p>
+    46→      </div>
+    47→    </div>
+    48→  );
+    49→}
+    50→
+    51→export default function CheckoutPage() {
+    52→  const { items, removeItem, clearCart, getTotal } = useCart();
+    53→
+    54→  const [customer, setCustomer] = useState({
+    55→    name: "",
+    56→    email: "",
+    57→    phone: "",
+    58→    company: "",
+    59→  });
+    60→  const [loading, setLoading] = useState(false);
+    61→  const [chariowLoading, setChariowLoading] = useState(false);
+    62→  const [success, setSuccess] = useState(false);
+    63→  const [error, setError] = useState("");
+    64→  const [discountCode, setDiscountCode] = useState("");
+    65→  const [paymentMethod, setPaymentMethod] = useState<"local" | "chariow">("chariow");
+    66→
+    67→  const total = getTotal();
+    68→  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    69→
+    70→  const handleCustomerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    71→    setCustomer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    72→  };
+    73→
+    74→  // ── Commande locale (manuelle) ──
+    75→  const handleLocalSubmit = async (e: React.FormEvent) => {
+    76→    e.preventDefault();
+    77→    if (!items.length) return;
+    78→
+    79→    setLoading(true);
+    80→    setError("");
+    81→
+    82→    try {
+    83→      const res = await fetch("/api/orders", {
+    84→        method: "POST",
+    85→        headers: { "Content-Type": "application/json" },
+    86→        body: JSON.stringify({
+    87→          customerName: customer.name,
+    88→          customerEmail: customer.email,
+    89→          customerPhone: customer.phone || null,
+    90→          customerCompany: customer.company || null,
+    91→          items: items.map((item) => ({
+    92→            mvpId: item.mvpId,
+    93→            name: item.name,
+    94→            description: item.offerName,
+    95→            price: item.price,
+    96→            quantity: item.quantity,
+    97→          })),
+    98→        }),
+    99→      });
+   100→
+   101→      if (!res.ok) {
+   102→        const data = await res.json();
+   103→        throw new Error(data.error || "Erreur lors de la commande.");
+   104→      }
+   105→
+   106→      clearCart();
+   107→      setSuccess(true);
+   108→    } catch (err) {
+   109→      setError(
+   110→        err instanceof Error
+   111→          ? err.message
+   112→          : "Une erreur inattendue s'est produite."
+   113→      );
+   114→    } finally {
+   115→      setLoading(false);
+   116→    }
+   117→  };
+   118→
+   119→  // ── Checkout Chariow ──
+   120→  const handleChariowCheckout = async (e: React.FormEvent) => {
+   121→    e.preventDefault();
+   122→    if (!items.length || !customer.email) return;
+   123→
+   124→    setChariowLoading(true);
+   125→    setError("");
+   126→
+   127→    try {
+   128→      // Pour chaque article du panier, initier un checkout Chariow
+   129→      // Chariow gère un produit par session de checkout
+   130→      for (const item of items) {
+   131→        // Récupérer l'ID produit Chariow depuis les données du MVP
+   132→        let chariowProductId: string | undefined;
+   133→        try {
+   134→          const mvpRes = await fetch(`/api/mvp/${item.slug}`);
+   135→          if (mvpRes.ok) {
+   136→            const mvpData = await mvpRes.json();
+   137→            chariowProductId = mvpData.chariowProductId || undefined;
+   138→          }
+   139→        } catch { /* ignorer */ }
+   140→
+   141→        const body: Record<string, unknown> = {
+   142→          email: customer.email,
+   143→          firstName: customer.name.split(" ")[0] || undefined,
+   144→          lastName: customer.name.split(" ").slice(1).join(" ") || undefined,
+   145→          phone: customer.phone || undefined,
+   146→          phoneCountryCode: "CI",
+   147→          discountCode: discountCode || undefined,
+   148→          metadata: {
+   149→            source: "afrisaas_lab",
+   150→            mvp_slug: item.slug,
+   151→            offer_name: item.offerName,
+   152→          },
+   153→        };
+   154→
+   155→        // Inclure chariowProductId uniquement si le MVP en a un
+   156→        if (chariowProductId) {
+   157→          body.chariowProductId = chariowProductId;
+   158→        }
+   159→
+   160→        const res = await fetch("/api/chariow/checkout", {
+   161→          method: "POST",
+   162→          headers: { "Content-Type": "application/json" },
+   163→          body: JSON.stringify(body),
+   164→        });
+   165→
+   166→        if (!res.ok) {
+   167→          const data = await res.json();
+   168→          // Si Chariow n'est pas configuré, basculer vers le mode manuel
+   169→          if (data.code === "API_KEY_MISSING" || data.code === "PRODUCT_NOT_LINKED") {
+   170→            throw new Error("CHARIOW_NOT_CONFIGURED");
+   171→          }
+   172→          if (data.error?.includes("Aucun produit Chariow")) {
+   173→            throw new Error("CHARIOW_NOT_CONFIGURED");
+   174→          }
+   175→          throw new Error(data.error || "Erreur lors du paiement Chariow.");
+   176→        }
+   177→
+   178→        const data = await res.json();
+   179→
+   180→        if (data.status === "awaiting_payment" && data.url) {
+   181→          // Rediriger vers la page de paiement Chariow
+   182→          clearCart();
+   183→          window.location.href = data.url;
+   184→          return;
+   185→        }
+   186→
+   187→        if (data.status === "completed") {
+   188→          clearCart();
+   189→          setSuccess(true);
+   190→          return;
+   191→        }
+   192→
+   193→        if (data.status === "already_purchased") {
+   194→          setError("Vous possédez déjà ce produit.");
+   195→          return;
+   196→        }
+   197→      }
+   198→    } catch (err) {
+   199→      if (err instanceof Error && err.message === "CHARIOW_NOT_CONFIGURED") {
+   200→        // Basculer vers la commande manuelle
+   201→        setError("");
+   202→        setPaymentMethod("local");
+   203→        setChariowLoading(false);
+   204→        return;
+   205→      }
+   206→      setError(
+   207→        err instanceof Error
+   208→          ? err.message
+   209→          : "Une erreur inattendue s'est produite lors du paiement."
+   210→      );
+   211→    } finally {
+   212→      setChariowLoading(false);
+   213→    }
+   214→  };
+   215→
+   216→  // ── État de confirmation ──
+   217→  if (success) {
+   218→    return (
+   219→      <main className="section-padding bg-noise min-h-screen flex items-center justify-center">
+   220→        <div className="container-main text-center max-w-lg">
+   221→          <div className="card-premium p-8 md:p-12">
+   222→            <div
+   223→              className="w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center"
+   224→              style={{
+   225→                background: "rgba(23, 74, 58, 0.2)",
+   226→                border: "2px solid rgba(45, 138, 106, 0.4)",
+   227→              }}
+   228→            >
+   229→              <svg className="w-8 h-8" style={{ color: "#3DA87E" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+   230→                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+   231→              </svg>
+   232→            </div>
+   233→            <h1 className="text-2xl md:text-3xl font-bold mb-3" style={{ color: "var(--text-primary)" }}>
+   234→              Commande confirmée !
+   235→            </h1>
+   236→            <p className="mb-8" style={{ color: "var(--text-secondary)" }}>
+   237→              Merci pour votre commande. Vous recevrez un email de confirmation avec les détails.
+   238→              Notre équipe vous contactera sous 24h pour la livraison de votre projet.
+   239→            </p>
+   240→            <Link href="/marketplace" className="btn-primary inline-flex">
+   241→              RETOUR AU MARKETPLACE
+   242→            </Link>
+   243→          </div>
+   244→        </div>
+   245→      </main>
+   246→    );
+   247→  }
+   248→
+   249→  // ── Panier vide ──
+   250→  if (!items.length) {
+   251→    return (
+   252→      <main className="section-padding bg-noise min-h-screen flex items-center justify-center">
+   253→        <div className="container-main text-center max-w-lg">
+   254→          <div className="card-premium p-8 md:p-12">
+   255→            <div className="w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center"
+   256→              style={{ background: "rgba(214, 168, 79, 0.1)", border: "1px solid rgba(214, 168, 79, 0.2)" }}>
+   257→              <svg className="w-8 h-8" style={{ color: "var(--gold)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+   258→                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-5.98.572m5.98-.572h9m-9 0a3 3 0 01-5.98.572M17.25 14.25a3 3 0 005.98.572m-5.98-.572h-9m9 0a3 3 0 015.98-.572M7.5 7.5h9m-9 0a3 3 0 01-5.98-.572M17.25 7.5a3 3 0 015.98-.572" />
+   259→              </svg>
+   260→            </div>
+   261→            <h1 className="text-2xl md:text-3xl font-bold mb-3" style={{ color: "var(--text-primary)" }}>
+   262→              Votre panier est vide
+   263→            </h1>
+   264→            <p className="mb-8" style={{ color: "var(--text-secondary)" }}>
+   265→              Explorez notre marketplace et ajoutez des solutions à votre panier.
+   266→            </p>
+   267→            <Link href="/marketplace" className="btn-primary inline-flex">
+   268→              DECOUVRIR LE MARKETPLACE
+   269→            </Link>
+   270→          </div>
+   271→        </div>
+   272→      </main>
+   273→    );
+   274→  }
+   275→
+   276→  const isProcessing = loading || chariowLoading;
+   277→
+   278→  return (
+   279→    <main className="section-padding bg-noise min-h-screen">
+   280→      <div className="container-main max-w-4xl mx-auto">
+   281→        {/* En-tête */}
+   282→        <div className="text-center mb-10 md:mb-14">
+   283→          <span className="section-badge">Commande</span>
+   284→          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+   285→            <span className="text-gradient">RECAPITULATIF DE VOTRE COMMANDE</span>
+   286→          </h1>
+   287→          <p className="mt-3 text-sm" style={{ color: "var(--text-muted)" }}>
+   288→            {itemCount} article{itemCount > 1 ? "s" : ""} dans votre panier
+   289→          </p>
+   290→        </div>
+   291→
+   292→        {/* Message d'erreur */}
+   293→        {error && (
+   294→          <div className="rounded-xl p-4 mb-8 text-center"
+   295→            style={{ background: "rgba(220, 38, 38, 0.1)", border: "1px solid rgba(220, 38, 38, 0.25)", color: "#fca5a5" }}
+   296→            role="alert">
+   297→            <div className="flex items-center justify-center gap-2 mb-1">
+   298→              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+   299→                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+   300→              </svg>
+   301→              <strong className="text-sm">Erreur</strong>
+   302→            </div>
+   303→            <p className="text-sm">{error}</p>
+   304→          </div>
+   305→        )}
+   306→
+   307→        <form onSubmit={paymentMethod === "chariow" ? handleChariowCheckout : handleLocalSubmit} className="space-y-8">
+   308→          {/* ── Articles du panier ── */}
+   309→          <section aria-label="Articles du panier">
+   310→            <div className="space-y-3">
+   311→              {items.map((item, index) => (
+   312→                <div key={item.mvpId} className="card-premium flex items-center justify-between gap-4">
+   313→                  <div className="min-w-0 flex-1">
+   314→                    <div className="flex items-center gap-2 mb-1">
+   315→                      <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ background: "rgba(214, 168, 79, 0.1)", color: "var(--gold)" }}>
+   316→                        {index + 1}
+   317→                      </span>
+   318→                      <p className="font-semibold text-sm md:text-base truncate" style={{ color: "var(--text-primary)" }}>
+   319→                        {item.name}
+   320→                      </p>
+   321→                    </div>
+   322→                    <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+   323→                      {item.offerName}
+   324→                      {item.quantity > 1 && <span className="ml-2 opacity-70">× {item.quantity}</span>}
+   325→                    </p>
+   326→                    <p className="text-sm font-bold mt-1" style={{ color: "var(--gold)" }}>
+   327→                      {formatPrice(item.price * item.quantity)}
+   328→                    </p>
+   329→                  </div>
+   330→                  <button type="button" onClick={() => removeItem(item.mvpId)}
+   331→                    className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-colors hover:scale-110"
+   332→                    style={{ background: "rgba(220, 38, 38, 0.1)", border: "1px solid rgba(220, 38, 38, 0.2)", color: "#fca5a5" }}
+   333→                    aria-label={`Supprimer ${item.name}`}>
+   334→                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+   335→                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+   336→                    </svg>
+   337→                  </button>
+   338→                </div>
+   339→              ))}
+   340→            </div>
+   341→
+   342→            {/* Sous-total et total */}
+   343→            <div className="mt-6 card-premium p-5">
+   344→              <div className="flex items-center justify-between mb-2">
+   345→                <span className="text-sm" style={{ color: "var(--text-muted)" }}>Sous-total ({itemCount} article{itemCount > 1 ? "s" : ""})</span>
+   346→                <span className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>{formatPrice(total)}</span>
+   347→              </div>
+   348→              <div className="flex items-center justify-between mb-3">
+   349→                <span className="text-sm" style={{ color: "var(--text-muted)" }}>Livraison</span>
+   350→                <span className="text-sm font-medium" style={{ color: "#3DA87E" }}>Gratuite</span>
+   351→              </div>
+   352→              <div className="divider-african my-3" />
+   353→              <div className="flex items-center justify-between">
+   354→                <span className="text-sm uppercase tracking-wider font-bold" style={{ color: "var(--text-primary)" }}>
+   355→                  Total
+   356→                </span>
+   357→                <span className="text-2xl md:text-3xl font-bold text-gradient">
+   358→                  {formatPrice(total)}
+   359→                </span>
+   360→              </div>
+   361→            </div>
+   362→          </section>
+   363→
+   364→          <div className="divider-african" />
+   365→
+   366→          {/* ── Coordonnées client ── */}
+   367→          <section aria-label="Vos coordonnées">
+   368→            <h2 className="text-lg font-bold mb-5" style={{ color: "var(--text-primary)" }}>
+   369→              Vos coordonnées
+   370→            </h2>
+   371→            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+   372→              <div>
+   373→                <label htmlFor="checkout-name" className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+   374→                  Nom complet <span style={{ color: "var(--gold)" }}>*</span>
+   375→                </label>
+   376→                <input id="checkout-name" name="name" type="text" required value={customer.name} onChange={handleCustomerChange}
+   377→                  placeholder="Ex: Koné Amara" className="input-premium" disabled={isProcessing} />
+   378→              </div>
+   379→              <div>
+   380→                <label htmlFor="checkout-email" className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+   381→                  Email <span style={{ color: "var(--gold)" }}>*</span>
+   382→                </label>
+   383→                <input id="checkout-email" name="email" type="email" required value={customer.email} onChange={handleCustomerChange}
+   384→                  placeholder="vous@exemple.com" className="input-premium" disabled={isProcessing} />
+   385→              </div>
+   386→              <div>
+   387→                <label htmlFor="checkout-phone" className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+   388→                  Téléphone
+   389→                </label>
+   390→                <input id="checkout-phone" name="phone" type="tel" value={customer.phone} onChange={handleCustomerChange}
+   391→                  placeholder="+225 07 XX XX XX XX" className="input-premium" disabled={isProcessing} />
+   392→              </div>
+   393→              <div>
+   394→                <label htmlFor="checkout-company" className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+   395→                  Entreprise
+   396→                </label>
+   397→                <input id="checkout-company" name="company" type="text" value={customer.company} onChange={handleCustomerChange}
+   398→                  placeholder="Nom de votre entreprise" className="input-premium" disabled={isProcessing} />
+   399→              </div>
+   400→            </div>
+   401→
+   402→            {/* ── Code promo ── */}
+   403→            {paymentMethod === "chariow" && (
+   404→              <div className="mt-5">
+   405→                <label htmlFor="discount-code" className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
+   406→                  Code promo <span className="text-xs opacity-60">(optionnel)</span>
+   407→                </label>
+   408→                <div className="flex gap-3">
+   409→                  <input id="discount-code" type="text" value={discountCode} onChange={(e) => setDiscountCode(e.target.value)}
+   410→                    placeholder="Ex: LANCEMENT2025" className="input-premium flex-1" disabled={isProcessing} />
+   411→                </div>
+   412→              </div>
+   413→            )}
+   414→          </section>
+   415→
+   416→          <div className="divider-african" />
+   417→
+   418→          {/* ── Sélecteur de mode de paiement ── */}
+   419→          <section aria-label="Mode de paiement">
+   420→            <h2 className="text-lg font-bold mb-5" style={{ color: "var(--text-primary)" }}>
+   421→              Mode de paiement
+   422→            </h2>
+   423→            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+   424→              {/* Paiement en ligne Chariow */}
+   425→              <button
+   426→                type="button"
+   427→                onClick={() => setPaymentMethod("chariow")}
+   428→                className="card-premium text-left p-5 transition-all duration-200 cursor-pointer"
+   429→                disabled={isProcessing}
+   430→                style={{
+   431→                  borderColor: paymentMethod === "chariow" ? "var(--gold)" : "var(--border-subtle)",
+   432→                  boxShadow: paymentMethod === "chariow" ? "var(--glow-gold)" : "none",
+   433→                }}
+   434→              >
+   435→                <div className="flex items-center gap-3 mb-2">
+   436→                  <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+   437→                    style={{ background: "rgba(214, 168, 79, 0.15)" }}>
+   438→                    <svg className="w-5 h-5" style={{ color: "var(--gold)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+   439→                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+   440→                    </svg>
+   441→                  </div>
+   442→                  <div>
+   443→                    <p className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
+   444→                      Paiement en ligne
+   445→                    </p>
+   446→                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+   447→                      Sécurisé par Chariow
+   448→                    </p>
+   449→                  </div>
+   450→                </div>
+   451→                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+   452→                  Carte bancaire, Mobile Money, Wave, Orange Money. Paiement instantané et livraison automatique.
+   453→                </p>
+   454→                {paymentMethod === "chariow" && (
+   455→                  <div className="mt-3 text-xs font-medium" style={{ color: "var(--gold)" }}>
+   456→                    ✓ Sélectionné
+   457→                  </div>
+   458→                )}
+   459→              </button>
+   460→
+   461→              {/* Commande manuelle */}
+   462→              <button
+   463→                type="button"
+   464→                onClick={() => setPaymentMethod("local")}
+   465→                className="card-premium text-left p-5 transition-all duration-200 cursor-pointer"
+   466→                disabled={isProcessing}
+   467→                style={{
+   468→                  borderColor: paymentMethod === "local" ? "var(--gold)" : "var(--border-subtle)",
+   469→                  boxShadow: paymentMethod === "local" ? "var(--glow-gold)" : "none",
+   470→                }}
+   471→              >
+   472→                <div className="flex items-center gap-3 mb-2">
+   473→                  <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+   474→                    style={{ background: "rgba(214, 168, 79, 0.15)" }}>
+   475→                    <svg className="w-5 h-5" style={{ color: "var(--gold)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+   476→                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+   477→                    </svg>
+   478→                  </div>
+   479→                  <div>
+   480→                    <p className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
+   481→                      Commander manuellement
+   482→                    </p>
+   483→                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+   484→                      Nous vous contactons
+   485→                    </p>
+   486→                  </div>
+   487→                </div>
+   488→                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+   489→                  Envoyez votre commande et nous vous contacterons pour finaliser le paiement via WhatsApp.
+   490→                </p>
+   491→                {paymentMethod === "local" && (
+   492→                  <div className="mt-3 text-xs font-medium" style={{ color: "var(--gold)" }}>
+   493→                    ✓ Sélectionné
+   494→                  </div>
+   495→                )}
+   496→              </button>
+   497→            </div>
+   498→          </section>
+   499→
+   500→          {/* ── Bouton de soumission ── */}
+   501→          <button
+   502→            type="submit"
+   503→            disabled={isProcessing}
+   504→            className="btn-primary w-full justify-center text-base py-3.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+   505→          >
+   506→            {isProcessing ? (
+   507→              <span className="inline-flex items-center gap-2">
+   508→                <Spinner className="h-5 w-5" />
+   509→                {chariowLoading
+   510→                  ? "Redirection vers le paiement sécurisé..."
+   511→                  : "Traitement de votre commande..."}
+   512→              </span>
+   513→            ) : (
+   514→              <span className="inline-flex items-center gap-2">
+   515→                {paymentMethod === "chariow" ? (
+   516→                  <>
+   517→                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+   518→                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+   519→                    </svg>
+   520→                    PAYER {formatPrice(total)} EN LIGNE
+   521→                  </>
+   522→                ) : (
+   523→                  <>
+   524→                    CONFIRMER LA COMMANDE
+   525→                  </>
+   526→                )}
+   527→              </span>
+   528→            )}
+   529→          </button>
+   530→
+   531→          {/* ── Badges de confiance et avis de sécurité ── */}
+   532→          {paymentMethod === "chariow" && (
+   533→            <>
+   534→              <TrustBadges />
+   535→              <div className="glass-gold rounded-xl p-4 flex items-center gap-3">
+   536→                <svg className="w-5 h-5 flex-shrink-0" style={{ color: "#3DA87E" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+   537→                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+   538→                </svg>
+   539→                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+   540→                  <strong style={{ color: "#3DA87E" }}>Paiement 100% sécurisé.</strong>{" "}
+   541→                  Vous serez redirigé vers la page de paiement Chariow. Vos données bancaires ne transitent jamais par nos serveurs.
+   542→                  Tous les prix sont en FCFA (Franc CFA).
+   543→                </p>
+   544→              </div>
+   545→            </>
+   546→          )}
+   547→
+   548→          {paymentMethod === "local" && (
+   549→            <div className="rounded-xl p-4 flex items-center gap-3"
+   550→              style={{ background: "rgba(99, 102, 241, 0.05)", border: "1px solid rgba(99, 102, 241, 0.15)" }}>
+   551→              <svg className="w-5 h-5 flex-shrink-0" style={{ color: "#818CF8" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+   552→                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.75 15 6.75 15s6.75-6.716 6.75-15c0-1.072-.145-2.1-.417-3.067C14.649 2.057 13.058 1 11.25 1c-1.808 0-3.399 1.057-4.083 2.683A9.027 9.027 0 006.75 6.75z" />
+   553→              </svg>
+   554→              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+   555→                <strong style={{ color: "#818CF8" }}>Contact personnalisé.</strong>{" "}
+   556→                Notre équipe vous contactera sous 24h par WhatsApp ou email pour finaliser votre commande.
+   557→              </p>
+   558→            </div>
+   559→          )}
+   560→        </form>
+   561→      </div>
+   562→    </main>
+   563→  );
+   564→}
+   565→

@@ -1,0 +1,1408 @@
+     1→@import "tailwindcss";
+     2→
+     3→/* ═══════════════════════════════════════════════════════════════
+     4→   AFRISAAS LAB — African Futurism Design System
+     5→   Studio de création SaaS et produits IA pour l'Afrique
+     6→   ═══════════════════════════════════════════════════════════════ */
+     7→
+     8→:root {
+     9→  /* — Core Palette — */
+    10→  --bg-primary:       #080806;
+    11→  --bg-secondary:     #11100D;
+    12→  --bg-card:          #16150F;
+    13→  --bg-card-hover:    #1E1C14;
+    14→  --bg-elevated:      #1A1812;
+    15→
+    16→  --text-primary:     #F5F2EA;
+    17→  --text-secondary:   #D8CFBF;
+    18→  --text-muted:       #8A8272;
+    19→
+    20→  --gold:             #D6A84F;
+    21→  --gold-dim:         #A07A30;
+    22→  --gold-glow:        rgba(214, 168, 79, 0.25);
+    23→  --gold-subtle:      rgba(214, 168, 79, 0.08);
+    24→
+    25→  --earth:            #8A5A32;
+    26→  --earth-dim:        #6B4525;
+    27→  --earth-subtle:     rgba(138, 90, 50, 0.12);
+    28→
+    29→  --deep-green:       #174A3A;
+    30→  --green-subtle:     rgba(23, 74, 58, 0.15);
+    31→
+    32→  --sand:             #D8CFBF;
+    33→
+    34→  /* — African-Inspired Vibrant Palette — */
+    35→  --primary:          #FF6B35;
+    36→  --primary-glow:     rgba(255, 107, 53, 0.25);
+    37→  --primary-subtle:   rgba(255, 107, 53, 0.08);
+    38→  --accent-gold:      #FFB800;
+    39→  --accent-gold-glow: rgba(255, 184, 0, 0.25);
+    40→  --accent-gold-subtle: rgba(255, 184, 0, 0.08);
+    41→  --success:          #00D4AA;
+    42→  --success-glow:     rgba(0, 212, 170, 0.25);
+    43→  --success-subtle:   rgba(0, 212, 170, 0.08);
+    44→  --secondary:        #7C5CFC;
+    45→  --secondary-glow:   rgba(124, 92, 252, 0.25);
+    46→  --secondary-subtle: rgba(124, 92, 252, 0.08);
+    47→
+    48→  --accent:           #D6A84F;
+    49→  --accent-dim:       #A07A30;
+    50→  --accent-glow:      rgba(214, 168, 79, 0.25);
+    51→  --accent-secondary: #174A3A;
+    52→
+    53→  --border-subtle:    rgba(214, 168, 79, 0.1);
+    54→  --border-medium:    rgba(214, 168, 79, 0.2);
+    55→  --border-earth:     rgba(138, 90, 50, 0.15);
+    56→
+    57→  /* — Gradients — */
+    58→  --gradient-hero:    linear-gradient(160deg, #080806 0%, #11100D 40%, #0E110D 70%, #080806 100%);
+    59→  --gradient-accent:  linear-gradient(135deg, #D6A84F, #8A5A32);
+    60→  --gradient-accent-soft: linear-gradient(135deg, #D6A84F, #B8923E);
+    61→  --gradient-card:    linear-gradient(160deg, #16150F, #11100D);
+    62→  --gradient-text:    linear-gradient(135deg, #D6A84F, #E8C878);
+    63→  --gradient-text-green: linear-gradient(135deg, #2D8A6A, #174A3A);
+    64→  --gradient-earth:    linear-gradient(135deg, #8A5A32, #6B4525);
+    65→  --gradient-primary:  linear-gradient(135deg, #FF6B35, #D45020);
+    66→  --gradient-gold:     linear-gradient(135deg, #FFB800, #D6A84F);
+    67→  --gradient-success:  linear-gradient(135deg, #00D4AA, #00A888);
+    68→  --gradient-secondary: linear-gradient(135deg, #7C5CFC, #6344D8);
+    69→  --gradient-sunset:   linear-gradient(135deg, #FF6B35, #FFB800);
+    70→  --gradient-aurora:   linear-gradient(135deg, #7C5CFC, #00D4AA);
+    71→  --gradient-card-primary: linear-gradient(160deg, rgba(255,107,53,0.08), rgba(255,107,53,0.02));
+    72→  --gradient-card-gold: linear-gradient(160deg, rgba(255,184,0,0.08), rgba(255,184,0,0.02));
+    73→  --gradient-card-success: linear-gradient(160deg, rgba(0,212,170,0.08), rgba(0,212,170,0.02));
+    74→  --gradient-card-secondary: linear-gradient(160deg, rgba(124,92,252,0.08), rgba(124,92,252,0.02));
+    75→
+    76→  /* — Glow — */
+    77→  --glow-gold:   0 0 60px rgba(214, 168, 79, 0.12), 0 0 120px rgba(214, 168, 79, 0.04);
+    78→  --glow-card:   0 0 40px rgba(214, 168, 79, 0.06);
+    79→  --glow-green:  0 0 40px rgba(23, 74, 58, 0.15);
+    80→
+    81→  /* — Spacing — */
+    82→  --section-padding: clamp(4rem, 8vw, 8rem);
+    83→  --container-max: 1280px;
+    84→  --container-padding: clamp(1rem, 4vw, 2rem);
+    85→
+    86→  /* — Radius — */
+    87→  --radius-sm:  8px;
+    88→  --radius-md:  12px;
+    89→  --radius-lg:  16px;
+    90→  --radius-xl:  24px;
+    91→  --radius-full: 9999px;
+    92→
+    93→  /* — Typography — */
+    94→  --font-heading: 'Geist', system-ui, -apple-system, sans-serif;
+    95→  --font-body:    'Geist', system-ui, -apple-system, sans-serif;
+    96→  --font-mono:    'Geist Mono', 'Fira Code', monospace;
+    97→}
+    98→
+    99→/* ═══════════════════════════════════════════════════════════════
+   100→   BASE LAYER
+   101→   ═══════════════════════════════════════════════════════════════ */
+   102→@layer base {
+   103→  * {
+   104→    margin: 0;
+   105→    padding: 0;
+   106→    box-sizing: border-box;
+   107→  }
+   108→
+   109→  html {
+   110→    scroll-behavior: smooth;
+   111→    -webkit-font-smoothing: antialiased;
+   112→    -moz-osx-font-smoothing: grayscale;
+   113→  }
+   114→
+   115→  body {
+   116→    font-family: var(--font-body);
+   117→    background: var(--bg-primary);
+   118→    color: var(--text-primary);
+   119→    line-height: 1.6;
+   120→    overflow-x: hidden;
+   121→  }
+   122→
+   123→  ::selection {
+   124→    background: rgba(214, 168, 79, 0.3);
+   125→    color: var(--text-primary);
+   126→  }
+   127→
+   128→  ::-webkit-scrollbar {
+   129→    width: 8px;
+   130→  }
+   131→  ::-webkit-scrollbar-track {
+   132→    background: var(--bg-secondary);
+   133→    border-radius: var(--radius-full);
+   134→  }
+   135→  ::-webkit-scrollbar-thumb {
+   136→    background: var(--border-medium);
+   137→    border-radius: var(--radius-full);
+   138→    border: 2px solid var(--bg-secondary);
+   139→  }
+   140→  ::-webkit-scrollbar-thumb:hover {
+   141→    background: var(--gold-dim);
+   142→  }
+   143→  /* Firefox scrollbar */
+   144→  * {
+   145→    scrollbar-width: thin;
+   146→    scrollbar-color: var(--border-medium) var(--bg-secondary);
+   147→  }
+   148→}
+   149→
+   150→/* ═══════════════════════════════════════════════════════════════
+   151→   UTILITIES
+   152→   ═══════════════════════════════════════════════════════════════ */
+   153→@layer utilities {
+   154→  .text-gradient {
+   155→    background: var(--gradient-text);
+   156→    -webkit-background-clip: text;
+   157→    -webkit-text-fill-color: transparent;
+   158→    background-clip: text;
+   159→  }
+   160→
+   161→  .text-gradient-green {
+   162→    background: var(--gradient-text-green);
+   163→    -webkit-background-clip: text;
+   164→    -webkit-text-fill-color: transparent;
+   165→    background-clip: text;
+   166→  }
+   167→
+   168→  /* African geometric pattern — ultra subtle */
+   169→  .bg-african-pattern {
+   170→    background-image:
+   171→      /* Diamond grid — inspired by African textile geometry */
+   172→      linear-gradient(45deg, rgba(214, 168, 79, 0.03) 25%, transparent 25%),
+   173→      linear-gradient(-45deg, rgba(214, 168, 79, 0.03) 25%, transparent 25%),
+   174→      linear-gradient(45deg, transparent 75%, rgba(214, 168, 79, 0.03) 75%),
+   175→      linear-gradient(-45deg, transparent 75%, rgba(214, 168, 79, 0.03) 75%);
+   176→    background-size: 80px 80px;
+   177→    background-position: 0 0, 0 40px, 40px -40px, -40px 0;
+   178→  }
+   179→
+   180→  /* Subtle cross-hatch inspired by Kente cloth */
+   181→  .bg-kente-subtle {
+   182→    background-image:
+   183→      linear-gradient(0deg, rgba(214, 168, 79, 0.025) 1px, transparent 1px),
+   184→      linear-gradient(90deg, rgba(214, 168, 79, 0.025) 1px, transparent 1px),
+   185→      linear-gradient(45deg, rgba(138, 90, 50, 0.02) 1px, transparent 1px),
+   186→      linear-gradient(-45deg, rgba(138, 90, 50, 0.02) 1px, transparent 1px);
+   187→    background-size: 60px 60px, 60px 60px, 84px 84px, 84px 84px;
+   188→  }
+   189→
+   190→  /* Tech grid overlay */
+   191→  .bg-grid {
+   192→    background-image:
+   193→      linear-gradient(rgba(214, 168, 79, 0.015) 1px, transparent 1px),
+   194→      linear-gradient(90deg, rgba(214, 168, 79, 0.015) 1px, transparent 1px);
+   195→    background-size: 60px 60px;
+   196→  }
+   197→
+   198→  .bg-noise {
+   199→    position: relative;
+   200→  }
+   201→  .bg-noise::before {
+   202→    content: '';
+   203→    position: absolute;
+   204→    inset: 0;
+   205→    opacity: 0.025;
+   206→    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+   207→    pointer-events: none;
+   208→    z-index: 0;
+   209→  }
+   210→
+   211→  .glow-gold {
+   212→    box-shadow: var(--glow-gold);
+   213→  }
+   214→
+   215→  .glow-card {
+   216→    box-shadow: var(--glow-card);
+   217→  }
+   218→
+   219→  .glow-green {
+   220→    box-shadow: var(--glow-green);
+   221→  }
+   222→
+   223→  .glass {
+   224→    background: rgba(22, 21, 15, 0.7);
+   225→    backdrop-filter: blur(16px) saturate(180%);
+   226→    -webkit-backdrop-filter: blur(16px) saturate(180%);
+   227→    border: 1px solid var(--border-subtle);
+   228→  }
+   229→
+   230→  .glass-strong {
+   231→    background: rgba(17, 16, 13, 0.85);
+   232→    backdrop-filter: blur(24px) saturate(200%);
+   233→    -webkit-backdrop-filter: blur(24px) saturate(200%);
+   234→    border: 1px solid var(--border-subtle);
+   235→  }
+   236→
+   237→  .glass-gold {
+   238→    background: rgba(214, 168, 79, 0.05);
+   239→    backdrop-filter: blur(16px) saturate(180%);
+   240→    -webkit-backdrop-filter: blur(16px) saturate(180%);
+   241→    border: 1px solid rgba(214, 168, 79, 0.15);
+   242→  }
+   243→
+   244→  .glass-morphism {
+   245→    background: rgba(22, 21, 15, 0.6);
+   246→    backdrop-filter: blur(20px) saturate(200%) brightness(1.1);
+   247→    -webkit-backdrop-filter: blur(20px) saturate(200%) brightness(1.1);
+   248→    border: 1px solid rgba(214, 168, 79, 0.12);
+   249→    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+   250→  }
+   251→
+   252→  .glass-morphism-strong {
+   253→    background: rgba(17, 16, 13, 0.75);
+   254→    backdrop-filter: blur(32px) saturate(250%) brightness(1.1);
+   255→    -webkit-backdrop-filter: blur(32px) saturate(250%) brightness(1.1);
+   256→    border: 1px solid rgba(214, 168, 79, 0.18);
+   257→    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+   258→  }
+   259→
+   260→  .animate-gradient {
+   261→    background-size: 200% 200%;
+   262→    animation: gradient-shift 8s ease infinite;
+   263→  }
+   264→
+   265→  .animate-float {
+   266→    animation: float 6s ease-in-out infinite;
+   267→  }
+   268→
+   269→  .animate-float-slow {
+   270→    animation: float 10s ease-in-out infinite;
+   271→  }
+   272→
+   273→  .animate-float-delayed {
+   274→    animation: float 8s ease-in-out 2s infinite;
+   275→  }
+   276→
+   277→  .animate-pulse-glow {
+   278→    animation: pulse-gold 3s ease-in-out infinite;
+   279→  }
+   280→
+   281→  .animate-connection {
+   282→    animation: connection-flow 3s linear infinite;
+   283→  }
+   284→
+   285→  .animate-shimmer {
+   286→    animation: shimmer 2s ease-in-out infinite;
+   287→  }
+   288→
+   289→  .animate-particle-1 {
+   290→    animation: particle-float-1 15s ease-in-out infinite;
+   291→  }
+   292→
+   293→  .animate-particle-2 {
+   294→    animation: particle-float-2 20s ease-in-out infinite;
+   295→  }
+   296→
+   297→  .animate-particle-3 {
+   298→    animation: particle-float-3 25s ease-in-out infinite;
+   299→  }
+   300→
+   301→  .animate-gradient-bg {
+   302→    background-size: 400% 400%;
+   303→    animation: gradient-bg 12s ease infinite;
+   304→  }
+   305→
+   306→  .section-padding {
+   307→    padding-top: var(--section-padding);
+   308→    padding-bottom: var(--section-padding);
+   309→  }
+   310→
+   311→  .container-main {
+   312→    max-width: var(--container-max);
+   313→    margin-left: auto;
+   314→    margin-right: auto;
+   315→    padding-left: var(--container-padding);
+   316→    padding-right: var(--container-padding);
+   317→  }
+   318→
+   319→  /* Card base — African Futurism */
+   320→  .card-premium {
+   321→    background: var(--gradient-card);
+   322→    border: 1px solid var(--border-subtle);
+   323→    border-radius: var(--radius-lg);
+   324→    padding: 1.5rem;
+   325→    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+   326→    position: relative;
+   327→    overflow: hidden;
+   328→  }
+   329→  .card-premium::before {
+   330→    content: '';
+   331→    position: absolute;
+   332→    top: 0;
+   333→    left: 0;
+   334→    right: 0;
+   335→    height: 2px;
+   336→    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+   337→    opacity: 0;
+   338→    transition: opacity 0.35s ease;
+   339→  }
+   340→  .card-premium:hover {
+   341→    border-color: var(--border-medium);
+   342→    background: var(--bg-card-hover);
+   343→    transform: translateY(-3px);
+   344→    box-shadow: var(--glow-card);
+   345→  }
+   346→  .card-premium:hover::before {
+   347→    opacity: 1;
+   348→  }
+   349→
+   350→  /* Badge */
+   351→  .badge-accent {
+   352→    display: inline-flex;
+   353→    align-items: center;
+   354→    gap: 0.375rem;
+   355→    padding: 0.25rem 0.75rem;
+   356→    border-radius: var(--radius-full);
+   357→    font-size: 0.75rem;
+   358→    font-weight: 600;
+   359→    letter-spacing: 0.08em;
+   360→    text-transform: uppercase;
+   361→    background: rgba(214, 168, 79, 0.1);
+   362→    color: var(--gold);
+   363→    border: 1px solid rgba(214, 168, 79, 0.2);
+   364→  }
+   365→
+   366→  .badge-green {
+   367→    display: inline-flex;
+   368→    align-items: center;
+   369→    gap: 0.375rem;
+   370→    padding: 0.25rem 0.75rem;
+   371→    border-radius: var(--radius-full);
+   372→    font-size: 0.75rem;
+   373→    font-weight: 600;
+   374→    letter-spacing: 0.08em;
+   375→    text-transform: uppercase;
+   376→    background: var(--green-subtle);
+   377→    color: #2D8A6A;
+   378→    border: 1px solid rgba(23, 74, 58, 0.3);
+   379→  }
+   380→
+   381→  /* Status badges */
+   382→  .badge-live {
+   383→    display: inline-flex;
+   384→    align-items: center;
+   385→    gap: 0.375rem;
+   386→    padding: 0.2rem 0.6rem;
+   387→    border-radius: var(--radius-full);
+   388→    font-size: 0.7rem;
+   389→    font-weight: 600;
+   390→    letter-spacing: 0.06em;
+   391→    text-transform: uppercase;
+   392→    background: rgba(23, 74, 58, 0.2);
+   393→    color: #3DA87E;
+   394→    border: 1px solid rgba(23, 74, 58, 0.35);
+   395→  }
+   396→
+   397→  .badge-development {
+   398→    display: inline-flex;
+   399→    align-items: center;
+   400→    gap: 0.375rem;
+   401→    padding: 0.2rem 0.6rem;
+   402→    border-radius: var(--radius-full);
+   403→    font-size: 0.7rem;
+   404→    font-weight: 600;
+   405→    letter-spacing: 0.06em;
+   406→    text-transform: uppercase;
+   407→    background: rgba(214, 168, 79, 0.15);
+   408→    color: var(--gold);
+   409→    border: 1px solid rgba(214, 168, 79, 0.3);
+   410→  }
+   411→
+   412→  .badge-experiment {
+   413→    display: inline-flex;
+   414→    align-items: center;
+   415→    gap: 0.375rem;
+   416→    padding: 0.2rem 0.6rem;
+   417→    border-radius: var(--radius-full);
+   418→    font-size: 0.7rem;
+   419→    font-weight: 600;
+   420→    letter-spacing: 0.06em;
+   421→    text-transform: uppercase;
+   422→    background: rgba(138, 90, 50, 0.15);
+   423→    color: var(--earth);
+   424→    border: 1px solid rgba(138, 90, 50, 0.3);
+   425→  }
+   426→
+   427→  /* Button Primary — Gold */
+   428→  .btn-primary {
+   429→    display: inline-flex;
+   430→    align-items: center;
+   431→    gap: 0.5rem;
+   432→    padding: 0.75rem 1.75rem;
+   433→    border-radius: var(--radius-md);
+   434→    font-weight: 600;
+   435→    font-size: 0.875rem;
+   436→    background: var(--gradient-accent);
+   437→    color: var(--bg-primary);
+   438→    border: none;
+   439→    cursor: pointer;
+   440→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   441→    text-decoration: none;
+   442→    letter-spacing: 0.02em;
+   443→  }
+   444→  .btn-primary:hover {
+   445→    transform: translateY(-2px);
+   446→    box-shadow: var(--glow-gold);
+   447→  }
+   448→
+   449→  /* Button Secondary — Outline Gold */
+   450→  .btn-secondary {
+   451→    display: inline-flex;
+   452→    align-items: center;
+   453→    gap: 0.5rem;
+   454→    padding: 0.75rem 1.75rem;
+   455→    border-radius: var(--radius-md);
+   456→    font-weight: 600;
+   457→    font-size: 0.875rem;
+   458→    background: transparent;
+   459→    color: var(--gold);
+   460→    border: 1px solid var(--gold);
+   461→    cursor: pointer;
+   462→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   463→    text-decoration: none;
+   464→    letter-spacing: 0.02em;
+   465→  }
+   466→  .btn-secondary:hover {
+   467→    background: rgba(214, 168, 79, 0.1);
+   468→    transform: translateY(-2px);
+   469→    box-shadow: var(--glow-gold);
+   470→  }
+   471→
+   472→  /* Button Green */
+   473→  .btn-green {
+   474→    display: inline-flex;
+   475→    align-items: center;
+   476→    gap: 0.5rem;
+   477→    padding: 0.75rem 1.75rem;
+   478→    border-radius: var(--radius-md);
+   479→    font-weight: 600;
+   480→    font-size: 0.875rem;
+   481→    background: linear-gradient(135deg, #174A3A, #2D8A6A);
+   482→    color: var(--text-primary);
+   483→    border: none;
+   484→    cursor: pointer;
+   485→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   486→    text-decoration: none;
+   487→    letter-spacing: 0.02em;
+   488→  }
+   489→  .btn-green:hover {
+   490→    transform: translateY(-2px);
+   491→    box-shadow: var(--glow-green);
+   492→  }
+   493→
+   494→  /* Form inputs */
+   495→  .input-premium {
+   496→    width: 100%;
+   497→    padding: 0.75rem 1rem;
+   498→    border-radius: var(--radius-md);
+   499→    background: var(--bg-secondary);
+   500→    border: 1px solid var(--border-subtle);
+   501→    color: var(--text-primary);
+   502→    font-size: 0.875rem;
+   503→    font-family: var(--font-body);
+   504→    transition: all 0.2s;
+   505→    outline: none;
+   506→  }
+   507→  .input-premium::placeholder {
+   508→    color: var(--text-muted);
+   509→  }
+   510→  .input-premium:focus {
+   511→    border-color: var(--gold);
+   512→    box-shadow: 0 0 0 3px var(--accent-glow);
+   513→  }
+   514→
+   515→  /* Section divider — African inspired line */
+   516→  .divider-african {
+   517→    height: 1px;
+   518→    background: linear-gradient(90deg, transparent, var(--border-medium), rgba(214, 168, 79, 0.3), var(--border-medium), transparent);
+   519→  }
+   520→
+   521→  /* Section heading */
+   522→  .section-badge {
+   523→    display: inline-flex;
+   524→    align-items: center;
+   525→    gap: 0.5rem;
+   526→    padding: 0.3rem 0.9rem;
+   527→    border-radius: var(--radius-full);
+   528→    font-size: 0.7rem;
+   529→    font-weight: 700;
+   530→    letter-spacing: 0.12em;
+   531→    text-transform: uppercase;
+   532→    background: rgba(214, 168, 79, 0.08);
+   533→    color: var(--gold);
+   534→    border: 1px solid rgba(214, 168, 79, 0.15);
+   535→    margin-bottom: 1rem;
+   536→  }
+   537→
+   538→  /* Stat cards with gradient backgrounds */
+   539→  .stat-card-primary {
+   540→    background: var(--gradient-card-primary);
+   541→    border: 1px solid rgba(255, 107, 53, 0.12);
+   542→    border-radius: var(--radius-lg);
+   543→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   544→  }
+   545→  .stat-card-primary:hover {
+   546→    border-color: rgba(255, 107, 53, 0.25);
+   547→    box-shadow: 0 0 30px rgba(255, 107, 53, 0.1);
+   548→    transform: translateY(-2px);
+   549→  }
+   550→
+   551→  .stat-card-gold {
+   552→    background: var(--gradient-card-gold);
+   553→    border: 1px solid rgba(255, 184, 0, 0.12);
+   554→    border-radius: var(--radius-lg);
+   555→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   556→  }
+   557→  .stat-card-gold:hover {
+   558→    border-color: rgba(255, 184, 0, 0.25);
+   559→    box-shadow: 0 0 30px rgba(255, 184, 0, 0.1);
+   560→    transform: translateY(-2px);
+   561→  }
+   562→
+   563→  .stat-card-success {
+   564→    background: var(--gradient-card-success);
+   565→    border: 1px solid rgba(0, 212, 170, 0.12);
+   566→    border-radius: var(--radius-lg);
+   567→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   568→  }
+   569→  .stat-card-success:hover {
+   570→    border-color: rgba(0, 212, 170, 0.25);
+   571→    box-shadow: 0 0 30px rgba(0, 212, 170, 0.1);
+   572→    transform: translateY(-2px);
+   573→  }
+   574→
+   575→  .stat-card-secondary {
+   576→    background: var(--gradient-card-secondary);
+   577→    border: 1px solid rgba(124, 92, 252, 0.12);
+   578→    border-radius: var(--radius-lg);
+   579→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   580→  }
+   581→  .stat-card-secondary:hover {
+   582→    border-color: rgba(124, 92, 252, 0.25);
+   583→    box-shadow: 0 0 30px rgba(124, 92, 252, 0.1);
+   584→    transform: translateY(-2px);
+   585→  }
+   586→
+   587→  /* Animated category pill */
+   588→  .pill-animated {
+   589→    position: relative;
+   590→    overflow: hidden;
+   591→  }
+   592→  .pill-animated::after {
+   593→    content: '';
+   594→    position: absolute;
+   595→    inset: 0;
+   596→    background: linear-gradient(90deg, transparent, rgba(214, 168, 79, 0.1), transparent);
+   597→    transform: translateX(-100%);
+   598→    transition: transform 0.4s ease;
+   599→  }
+   600→  .pill-animated:hover::after {
+   601→    transform: translateX(100%);
+   602→  }
+   603→
+   604→  /* Skeleton loading shimmer */
+   605→  .skeleton-shimmer {
+   606→    background: linear-gradient(90deg, var(--border-subtle) 25%, var(--border-medium) 50%, var(--border-subtle) 75%);
+   607→    background-size: 200% 100%;
+   608→    animation: shimmer 1.5s ease-in-out infinite;
+   609→  }
+   610→
+   611→  /* Tab animated indicator */
+   612→  .tab-indicator {
+   613→    position: relative;
+   614→  }
+   615→  .tab-indicator::after {
+   616→    content: '';
+   617→    position: absolute;
+   618→    bottom: -1px;
+   619→    left: 0;
+   620→    right: 0;
+   621→    height: 2px;
+   622→    background: var(--gradient-accent);
+   623→    border-radius: 2px 2px 0 0;
+   624→    transform: scaleX(0);
+   625→    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   626→  }
+   627→  .tab-indicator-active::after {
+   628→    transform: scaleX(1);
+   629→  }
+   630→
+   631→  /* Sidebar active indicator */
+   632→  .sidebar-item-active {
+   633→    position: relative;
+   634→  }
+   635→  .sidebar-item-active::before {
+   636→    content: '';
+   637→    position: absolute;
+   638→    left: 0;
+   639→    top: 25%;
+   640→    bottom: 25%;
+   641→    width: 3px;
+   642→    border-radius: 0 3px 3px 0;
+   643→    background: var(--gradient-accent);
+   644→  }
+   645→}
+   646→
+   647→/* ═══════════════════════════════════════════════════════════════
+   648→   KEYFRAMES
+   649→   ═══════════════════════════════════════════════════════════════ */
+   650→@keyframes gradient-shift {
+   651→  0%, 100% { background-position: 0% 50%; }
+   652→  50%      { background-position: 100% 50%; }
+   653→}
+   654→
+   655→@keyframes float {
+   656→  0%, 100% { transform: translateY(0); }
+   657→  50%      { transform: translateY(-10px); }
+   658→}
+   659→
+   660→@keyframes pulse-gold {
+   661→  0%, 100% { opacity: 1; box-shadow: var(--glow-gold); }
+   662→  50%      { opacity: 0.85; box-shadow: 0 0 30px rgba(214, 168, 79, 0.08); }
+   663→}
+   664→
+   665→@keyframes connection-flow {
+   666→  0%   { stroke-dashoffset: 20; }
+   667→  100% { stroke-dashoffset: 0; }
+   668→}
+   669→
+   670→@keyframes shimmer {
+   671→  0%   { background-position: -200% center; }
+   672→  100% { background-position: 200% center; }
+   673→}
+   674→
+   675→@keyframes particle-float-1 {
+   676→  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+   677→  25%      { transform: translate(30px, -40px) scale(1.1); opacity: 0.6; }
+   678→  50%      { transform: translate(-20px, -80px) scale(0.9); opacity: 0.4; }
+   679→  75%      { transform: translate(50px, -30px) scale(1.05); opacity: 0.5; }
+   680→}
+   681→
+   682→@keyframes particle-float-2 {
+   683→  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+   684→  33%      { transform: translate(-40px, -60px) scale(1.15); opacity: 0.5; }
+   685→  66%      { transform: translate(30px, -40px) scale(0.85); opacity: 0.35; }
+   686→}
+   687→
+   688→@keyframes particle-float-3 {
+   689→  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.25; }
+   690→  50%      { transform: translate(25px, -70px) scale(1.08); opacity: 0.45; }
+   691→}
+   692→
+   693→@keyframes gradient-bg {
+   694→  0%, 100% { background-position: 0% 50%; }
+   695→  25%      { background-position: 100% 0%; }
+   696→  50%      { background-position: 100% 100%; }
+   697→  75%      { background-position: 0% 100%; }
+   698→}
+   699→
+   700→@keyframes progress-bar {
+   701→  0%   { width: 0%; }
+   702→  100% { width: 100%; }
+   703→}
+   704→
+   705→/* Marketplace: hide scrollbar on category pill row */
+   706→.scrollbar-hide::-webkit-scrollbar {
+   707→  display: none;
+   708→}
+   709→
+   710→/* Hero floating particles */
+   711→.hero-particle {
+   712→  position: absolute;
+   713→  border-radius: 50%;
+   714→  pointer-events: none;
+   715→}
+   716→
+   717→/* Section transition wave */
+   718→.section-transition {
+   719→  position: relative;
+   720→}
+   721→.section-transition::after {
+   722→  content: '';
+   723→  position: absolute;
+   724→  bottom: 0;
+   725→  left: 0;
+   726→  right: 0;
+   727→  height: 1px;
+   728→  background: linear-gradient(90deg, transparent 5%, rgba(214, 168, 79, 0.15) 20%, rgba(255, 107, 53, 0.1) 50%, rgba(214, 168, 79, 0.15) 80%, transparent 95%);
+   729→}
+   730→
+   731→/* ═══════════════════════════════════════════════════════════════
+   732→   MICRO-INTERACTIONS & ADVANCED ANIMATIONS
+   733→   ═══════════════════════════════════════════════════════════════ */
+   734→
+   735→/* --- Magnetic Button Effect --- */
+   736→@keyframes magnetic-pull {
+   737→  0% { transform: translate(0, 0); }
+   738→  100% { transform: var(--magnetic-translate, translate(0, 0)); }
+   739→}
+   740→
+   741→/* --- Shimmer Loading Effect --- */
+   742→@keyframes shimmer-loading {
+   743→  0% { background-position: -200% 0; }
+   744→  100% { background-position: 200% 0; }
+   745→}
+   746→
+   747→/* --- Pulse Ring for Notifications --- */
+   748→@keyframes pulse-ring {
+   749→  0% { transform: scale(0.8); opacity: 1; }
+   750→  100% { transform: scale(2); opacity: 0; }
+   751→}
+   752→
+   753→/* --- Float Variation (more organic) --- */
+   754→@keyframes float-varied {
+   755→  0%, 100% { transform: translateY(0) rotate(0deg); }
+   756→  25% { transform: translateY(-10px) rotate(1deg); }
+   757→  50% { transform: translateY(-5px) rotate(0deg); }
+   758→  75% { transform: translateY(-15px) rotate(-1deg); }
+   759→}
+   760→
+   761→/* --- Glow Pulse Animation --- */
+   762→@keyframes glow-pulse {
+   763→  0%, 100% { box-shadow: 0 0 20px rgba(214, 168, 79, 0.3); }
+   764→  50% { box-shadow: 0 0 40px rgba(214, 168, 79, 0.6), 0 0 60px rgba(214, 168, 79, 0.2); }
+   765→}
+   766→
+   767→/* --- Border Gradient Animation --- */
+   768→@keyframes border-gradient {
+   769→  0% { background-position: 0% 50%; }
+   770→  50% { background-position: 100% 50%; }
+   771→  100% { background-position: 0% 50%; }
+   772→}
+   773→
+   774→/* --- Typing Dots Animation --- */
+   775→@keyframes typing-dot {
+   776→  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+   777→  40% { opacity: 1; transform: scale(1); }
+   778→}
+   779→
+   780→/* --- Ripple Effect Keyframe --- */
+   781→@keyframes ripple {
+   782→  0% { transform: scale(0); opacity: 0.5; }
+   783→  100% { transform: scale(4); opacity: 0; }
+   784→}
+   785→
+   786→/* --- Scale In Animation --- */
+   787→@keyframes scale-in {
+   788→  0% { transform: scale(0.9); opacity: 0; }
+   789→  100% { transform: scale(1); opacity: 1; }
+   790→}
+   791→
+   792→/* --- Slide Up Subtle --- */
+   793→@keyframes slide-up-subtle {
+   794→  0% { transform: translateY(10px); opacity: 0; }
+   795→  100% { transform: translateY(0); opacity: 1; }
+   796→}
+   797→
+   798→/* --- Underline Expand (for nav links) --- */
+   799→@keyframes underline-expand {
+   800→  from { width: 0; }
+   801→  to { width: 100%; }
+   802→}
+   803→
+   804→/* --- Shimmer Sweep (for cards) --- */
+   805→@keyframes shimmer-sweep {
+   806→  0% { transform: translateX(-100%) rotate(30deg); }
+   807→  100% { transform: translateX(200%) rotate(30deg); }
+   808→}
+   809→
+   810→/* ═══════════════════════════════════════════════════════════════
+   811→   MICRO-INTERACTION UTILITY CLASSES
+   812→   ═══════════════════════════════════════════════════════════════ */
+   813→
+   814→/* --- Animated Border Gradient --- */
+   815→.animated-border-gradient {
+   816→  background: linear-gradient(90deg, #D6A84F, #FF6B35, #174A3A, #D6A84F);
+   817→  background-size: 300% 100%;
+   818→  animation: border-gradient 3s ease infinite;
+   819→  position: relative;
+   820→}
+   821→.animated-border-gradient::before {
+   822→  content: '';
+   823→  position: absolute;
+   824→  inset: 2px;
+   825→  background: var(--bg-card);
+   826→  border-radius: inherit;
+   827→  z-index: 0;
+   828→}
+   829→.animated-border-gradient > * {
+   830→  position: relative;
+   831→  z-index: 1;
+   832→}
+   833→
+   834→/* --- Notification Badge Pulse --- */
+   835→.notification-pulse {
+   836→  position: relative;
+   837→}
+   838→.notification-pulse::before {
+   839→  content: '';
+   840→  position: absolute;
+   841→  inset: 0;
+   842→  border-radius: inherit;
+   843→  background: currentColor;
+   844→  animation: pulse-ring 1.5s ease-out infinite;
+   845→  z-index: -1;
+   846→}
+   847→
+   848→/* --- Card Shine Effect on Hover --- */
+   849→.card-shine {
+   850→  position: relative;
+   851→  overflow: hidden;
+   852→}
+   853→.card-shine::after {
+   854→  content: '';
+   855→  position: absolute;
+   856→  top: -50%;
+   857→  left: -50%;
+   858→  width: 200%;
+   859→  height: 200%;
+   860→  background: linear-gradient(
+   861→    to right,
+   862→    transparent 0%,
+   863→    rgba(255, 255, 255, 0.03) 45%,
+   864→    rgba(255, 255, 255, 0.08) 50%,
+   865→    rgba(255, 255, 255, 0.03) 55%,
+   866→    transparent 100%
+   867→  );
+   868→  transform: rotate(30deg);
+   869→  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+   870→  pointer-events: none;
+   871→}
+   872→.card-shine:hover::after {
+   873→  transform: rotate(30deg) translateX(100%);
+   874→}
+   875→
+   876→/* --- Text Glow Animation --- */
+   877→.text-glow-animation {
+   878→  animation: glow-pulse 2s ease-in-out infinite;
+   879→}
+   880→
+   881→/* --- Button Micro-interactions --- */
+   882→.btn-micro {
+   883→  position: relative;
+   884→  overflow: hidden;
+   885→  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+   886→}
+   887→.btn-micro:hover {
+   888→  transform: scale(1.02);
+   889→}
+   890→.btn-micro:active {
+   891→  transform: scale(0.98);
+   892→  transition-duration: 0.1s;
+   893→}
+   894→
+   895→/* --- Ripple Container --- */
+   896→.btn-ripple {
+   897→  position: relative;
+   898→  overflow: hidden;
+   899→}
+   900→.btn-ripple .ripple-effect {
+   901→  position: absolute;
+   902→  border-radius: 50%;
+   903→  background: rgba(255, 255, 255, 0.3);
+   904→  animation: ripple 0.6s ease-out forwards;
+   905→  pointer-events: none;
+   906→}
+   907→
+   908→/* --- Navigation Link Underline Animation --- */
+   909→.nav-link-animated {
+   910→  position: relative;
+   911→  text-decoration: none;
+   912→}
+   913→.nav-link-animated::after {
+   914→  content: '';
+   915→  position: absolute;
+   916→  bottom: -2px;
+   917→  left: 0;
+   918→  width: 0;
+   919→  height: 2px;
+   920→  background: var(--gradient-accent);
+   921→  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   922→  border-radius: 1px;
+   923→}
+   924→.nav-link-animated:hover::after {
+   925→  width: 100%;
+   926→}
+   927→.nav-link-animated:hover {
+   928→  color: var(--gold);
+   929→  transition: color 0.3s ease;
+   930→}
+   931→
+   932→/* --- Input Focus Glow --- */
+   933→.input-glow:focus {
+   934→  border-color: var(--gold);
+   935→  box-shadow: 
+   936→    0 0 0 3px var(--accent-glow),
+   937→    0 0 20px rgba(214, 168, 79, 0.15);
+   938→  outline: none;
+   939→}
+   940→
+   941→/* --- Floating Label Style --- */
+   942→.floating-label-group {
+   943→  position: relative;
+   944→}
+   945→.floating-label-group label {
+   946→  position: absolute;
+   947→  left: 1rem;
+   948→  top: 50%;
+   949→  transform: translateY(-50%);
+   950→  color: var(--text-muted);
+   951→  font-size: 0.875rem;
+   952→  pointer-events: none;
+   953→  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+   954→  background: var(--bg-secondary);
+   955→  padding: 0 0.25rem;
+   956→}
+   957→.floating-label-group input:focus + label,
+   958→.floating-label-group input:not(:placeholder-shown) + label {
+   959→  top: 0;
+   960→  font-size: 0.7rem;
+   961→  color: var(--gold);
+   962→}
+   963→
+   964→/* --- Stagger Animation Delays --- */
+   965→.stagger-1 { animation-delay: 0.1s; }
+   966→.stagger-2 { animation-delay: 0.2s; }
+   967→.stagger-3 { animation-delay: 0.3s; }
+   968→.stagger-4 { animation-delay: 0.4s; }
+   969→.stagger-5 { animation-delay: 0.5s; }
+   970→.stagger-6 { animation-delay: 0.6s; }
+   971→
+   972→/* --- Hover Lift Effect --- */
+   973→.hover-lift {
+   974→  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+   975→              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   976→}
+   977→.hover-lift:hover {
+   978→  transform: translateY(-4px);
+   979→  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+   980→}
+   981→
+   982→/* --- Scale on Hover --- */
+   983→.hover-scale {
+   984→  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   985→}
+   986→.hover-scale:hover {
+   987→  transform: scale(1.03);
+   988→}
+   989→
+   990→/* --- Glow on Hover --- */
+   991→.hover-glow {
+   992→  transition: box-shadow 0.3s ease;
+   993→}
+   994→.hover-glow:hover {
+   995→  box-shadow: 0 0 30px var(--accent-glow);
+   996→}
+   997→
+   998→/* --- Typing Indicator --- */
+   999→.typing-indicator {
+  1000→  display: inline-flex;
+  1001→  gap: 4px;
+  1002→  align-items: center;
+  1003→}
+  1004→.typing-indicator span {
+  1005→  width: 6px;
+  1006→  height: 6px;
+  1007→  border-radius: 50%;
+  1008→  background: var(--gold);
+  1009→  animation: typing-dot 1.4s infinite;
+  1010→}
+  1011→.typing-indicator span:nth-child(2) {
+  1012→  animation-delay: 0.2s;
+  1013→}
+  1014→.typing-indicator span:nth-child(3) {
+  1015→  animation-delay: 0.4s;
+  1016→}
+  1017→
+  1018→/* --- Skeleton Loading with Shimmer --- */
+  1019→.skeleton-loading {
+  1020→  background: linear-gradient(
+  1021→    90deg,
+  1022→    var(--border-subtle) 25%,
+  1023→    var(--border-medium) 50%,
+  1024→    var(--border-subtle) 75%
+  1025→  );
+  1026→  background-size: 200% 100%;
+  1027→  animation: shimmer-loading 1.5s ease-in-out infinite;
+  1028→  border-radius: var(--radius-md);
+  1029→}
+  1030→
+  1031→/* --- Magnetic Button Container --- */
+  1032→.magnetic-btn {
+  1033→  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  1034→  will-change: transform;
+  1035→}
+  1036→
+  1037→/* --- Counter Value Animation --- */
+  1038→.counter-value {
+  1039→  display: inline-block;
+  1040→  transition: transform 0.2s ease-out;
+  1041→}
+  1042→.counter-value.bump {
+  1043→  animation: scale-in 0.3s ease-out;
+  1044→}
+  1045→
+  1046→/* --- Progress Bar Animation --- */
+  1047→.progress-animated {
+  1048→  position: relative;
+  1049→  overflow: hidden;
+  1050→}
+  1051→.progress-animated::after {
+  1052→  content: '';
+  1053→  position: absolute;
+  1054→  top: 0;
+  1055→  left: 0;
+  1056→  right: 0;
+  1057→  bottom: 0;
+  1058→  background: linear-gradient(
+  1059→    90deg,
+  1060→    transparent,
+  1061→    rgba(255, 255, 255, 0.2),
+  1062→    transparent
+  1063→  );
+  1064→  animation: shimmer-sweep 2s ease-in-out infinite;
+  1065→}
+  1066→
+  1067→/* --- Card Highlight Border --- */
+  1068→.card-highlight-border {
+  1069→  position: relative;
+  1070→}
+  1071→.card-highlight-border::before {
+  1072→  content: '';
+  1073→  position: absolute;
+  1074→  inset: 0;
+  1075→  border-radius: inherit;
+  1076→  padding: 1px;
+  1077→  background: linear-gradient(
+  1078→    135deg,
+  1079→    var(--gold),
+  1080→    var(--primary),
+  1081→    var(--deep-green),
+  1082→    var(--gold)
+  1083→  );
+  1084→  background-size: 300% 300%;
+  1085→  animation: border-gradient 4s ease infinite;
+  1086→  -webkit-mask: 
+  1087→    linear-gradient(#fff 0 0) content-box, 
+  1088→    linear-gradient(#fff 0 0);
+  1089→  -webkit-mask-composite: xor;
+  1090→  mask-composite: exclude;
+  1091→  pointer-events: none;
+  1092→  opacity: 0;
+  1093→  transition: opacity 0.3s ease;
+  1094→}
+  1095→.card-highlight-border:hover::before {
+  1096→  opacity: 1;
+  1097→}
+  1098→
+  1099→/* --- Interactive Press Effect --- */
+  1100→.press-effect {
+  1101→  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  1102→}
+  1103→.press-effect:active {
+  1104→  transform: scale(0.97);
+  1105→  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  1106→}
+  1107→
+  1108→/* ═══════════════════════════════════════════════════════════════
+  1109→   MOBILE RESPONSIVE OPTIMIZATIONS
+  1110→   AFRISAAS LAB - African Futurism Design System
+  1111→   ═══════════════════════════════════════════════════════════════ */
+  1112→
+  1113→/* Hide scrollbar for carousels */
+  1114→.scrollbar-hide::-webkit-scrollbar {
+  1115→  display: none;
+  1116→}
+  1117→.scrollbar-hide {
+  1118→  -ms-overflow-style: none;
+  1119→  scrollbar-width: none;
+  1120→}
+  1121→
+  1122→@media (max-width: 768px) {
+  1123→  /* ── Touch Targets Minimum 44px ── */
+  1124→  .btn-primary,
+  1125→  .btn-secondary,
+  1126→  .btn-green {
+  1127→    min-height: 44px;
+  1128→    padding: 12px 20px;
+  1129→    font-size: 0.9rem;
+  1130→  }
+  1131→  
+  1132→  /* Touch-friendly buttons in cards */
+  1133→  .mvp-card-premium .btn-touch {
+  1134→    min-width: 44px;
+  1135→    min-height: 44px;
+  1136→    display: inline-flex;
+  1137→    align-items: center;
+  1138→    justify-content: center;
+  1139→  }
+  1140→
+  1141→  /* ── Sector Icons Carousel ── */
+  1142→  .sectors-carousel {
+  1143→    display: flex;
+  1144→    overflow-x: auto;
+  1145→    scroll-snap-type: x mandatory;
+  1146→    -webkit-overflow-scrolling: touch;
+  1147→    gap: 12px;
+  1148→    padding-bottom: 8px;
+  1149→    margin: 0 -1rem;
+  1150→    padding-left: 1rem;
+  1151→    padding-right: 1rem;
+  1152→  }
+  1153→  
+  1154→  .sectors-carousel > * {
+  1155→    scroll-snap-align: center;
+  1156→    flex-shrink: 0;
+  1157→    min-width: 100px;
+  1158→    max-width: 120px;
+  1159→  }
+  1160→
+  1161→  /* ── Testimonials Carousel ── */
+  1162→  .testimonials-container {
+  1163→    overflow-x: auto;
+  1164→    scroll-snap-type: x mandatory;
+  1165→    -webkit-overflow-scrolling: touch;
+  1166→  }
+  1167→  
+  1168→  .testimonial-card {
+  1169→    min-width: 85vw;
+  1170→    scroll-snap-align: center;
+  1171→  }
+  1172→
+  1173→  /* ── Hero Mobile Optimizations ── */
+  1174→  .hero-mobile-title {
+  1175→    font-size: 1.75rem !important;
+  1176→    line-height: 1.15 !important;
+  1177→  }
+  1178→  
+  1179→  .hero-mobile-subtitle {
+  1180→    font-size: 0.875rem !important;
+  1181→  }
+  1182→  
+  1183→  .hero-image-mobile {
+  1184→    max-width: 280px !important;
+  1185→    margin: 0 auto;
+  1186→  }
+  1187→  
+  1188→  .hero-image-mobile img {
+  1189→    max-height: 320px !important;
+  1190→    object-fit: cover !important;
+  1191→    object-position: top center !important;
+  1192→  }
+  1193→
+  1194→  /* ── Stats Grid Mobile (2x2) ── */
+  1195→  .stats-grid-mobile {
+  1196→    grid-template-columns: repeat(2, 1fr) !important;
+  1197→    gap: 0.75rem !important;
+  1198→  }
+  1199→  
+  1200→  .stat-card-mobile {
+  1201→    padding: 0.875rem !important;
+  1202→  }
+  1203→
+  1204→  /* ── MVP Card Mobile ── */
+  1205→  .mvp-card-image-mobile {
+  1206→    height: 150px !important;
+  1207→  }
+  1208→  
+  1209→  .mvp-card-actions-mobile {
+  1210→    flex-direction: column !important;
+  1211→    gap: 0.75rem !important;
+  1212→  }
+  1213→  
+  1214→  .mvp-card-actions-mobile > div {
+  1215→    width: 100%;
+  1216→    justify-content: space-between !important;
+  1217→  }
+  1218→  
+  1219→  .mvp-card-price-mobile {
+  1220→    font-size: 1.25rem !important;
+  1221→  }
+  1222→
+  1223→  /* ── Search Bar Full Width Mobile ── */
+  1224→  .search-bar-mobile {
+  1225→    flex-direction: column !important;
+  1226→  }
+  1227→  
+  1228→  .search-bar-mobile button {
+  1229→    width: 100%;
+  1230→    justify-content: center;
+  1231→  }
+  1232→
+  1233→  /* ── Tags Wrap Mobile ── */
+  1234→  .tags-mobile {
+  1235→    gap: 0.5rem !important;
+  1236→  }
+  1237→  
+  1238→  .tags-mobile button {
+  1239→    font-size: 0.7rem !important;
+  1240→    padding: 0.375rem 0.75rem !important;
+  1241→  }
+  1242→
+  1243→  /* ── Navbar Mobile Overlay ── */
+  1244→  .mobile-nav-overlay {
+  1245→    position: fixed;
+  1246→    top: 0;
+  1247→    left: 0;
+  1248→    right: 0;
+  1249→    bottom: 0;
+  1250→    background: rgba(8, 8, 6, 0.98);
+  1251→    backdrop-filter: blur(20px);
+  1252→    -webkit-backdrop-filter: blur(20px);
+  1253→    z-index: 60;
+  1254→    display: flex;
+  1255→    flex-direction: column;
+  1256→    padding-top: 5rem;
+  1257→    padding-bottom: 2rem;
+  1258→  }
+  1259→  
+  1260→  .mobile-nav-link {
+  1261→    min-height: 48px;
+  1262→    display: flex;
+  1263→    align-items: center;
+  1264→    font-size: 1.125rem !important;
+  1265→    padding: 0.875rem 1.5rem !important;
+  1266→    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+  1267→  }
+  1268→  
+  1269→  .mobile-nav-link:last-of-type {
+  1270→    border-bottom: none;
+  1271→  }
+  1272→
+  1273→  /* ── Section Padding Reduced on Mobile ── */
+  1274→  .section-padding-mobile {
+  1275→    padding-top: 3rem !important;
+  1276→    padding-bottom: 3rem !important;
+  1277→  }
+  1278→
+  1279→  /* ── CTA Buttons Stack on Mobile ── */
+  1280→  .cta-buttons-mobile {
+  1281→    flex-direction: column !important;
+  1282→    width: 100%;
+  1283→  }
+  1284→  
+  1285→  .cta-buttons-mobile a {
+  1286→    width: 100%;
+  1287→    justify-content: center;
+  1288→    text-align: center;
+  1289→  }
+  1290→
+  1291→  /* ── Testimonial Dots Larger for Touch ── */
+  1292→  .testimonial-dot {
+  1293→    width: 12px !important;
+  1294→    height: 12px !important;
+  1295→    min-width: 44px;
+  1296→    min-height: 44px;
+  1297→    border-radius: 9999px;
+  1298→    display: inline-flex;
+  1299→    align-items: center;
+  1300→    justify-content: center;
+  1301→    padding: 16px;
+  1302→  }
+  1303→  
+  1304→  .testimonial-dot-inner {
+  1305→    width: 8px;
+  1306→    height: 8px;
+  1307→    border-radius: 50%;
+  1308→  }
+  1309→
+  1310→  /* ── How It Works Steps Mobile ── */
+  1311→  .steps-container-mobile {
+  1312→    flex-direction: column !important;
+  1313→    gap: 1.5rem !important;
+  1314→  }
+  1315→  
+  1316→  .step-card-mobile {
+  1317→    max-width: 100% !important;
+  1318→    width: 100% !important;
+  1319→  }
+  1320→
+  1321→  /* ── AI Lab Section Mobile ── */
+  1322→  .ai-lab-content-mobile {
+  1323→    order: 2 !important;
+  1324→  }
+  1325→  
+  1326→  .ai-lab-image-mobile {
+  1327→    order: 1 !important;
+  1328→    max-width: 260px !important;
+  1329→    margin: 0 auto 1.5rem !important;
+  1330→  }
+  1331→
+  1332→  /* ── Feature Grid Mobile ── */
+  1333→  .feature-grid-mobile {
+  1334→    grid-template-columns: 1fr !important;
+  1335→    gap: 0.625rem !important;
+  1336→  }
+  1337→
+  1338→  /* ── Footer Mobile ── */
+  1339→  .footer-grid-mobile {
+  1340→    grid-template-columns: 1fr !important;
+  1341→    gap: 2rem !important;
+  1342→  }
+  1343→}
+  1344→
+  1345→/* ── Additional Touch Optimizations for Small Screens ── */
+  1346→@media (max-width: 480px) {
+  1347→  .hero-mobile-title {
+  1348→    font-size: 1.5rem !important;
+  1349→  }
+  1350→  
+  1351→  .sectors-carousel > * {
+  1352→    min-width: 90px;
+  1353→    max-width: 105px;
+  1354→    padding: 0.875rem !important;
+  1355→  }
+  1356→  
+  1357→  .mvp-card-image-mobile {
+  1358→    height: 130px !important;
+  1359→  }
+  1360→}
+  1361→
+  1362→/* ── Smooth Scroll Behavior for Carousels ── */
+  1363→@supports (scroll-snap-type: x mandatory) {
+  1364→  .sectors-carousel,
+  1365→  .testimonials-container {
+  1366→    scroll-behavior: smooth;
+  1367→  }
+  1368→}
+  1369→
+  1370→/* ── Pulse Animation for Buy Button ── */
+  1371→@keyframes pulse-ring-mobile {
+  1372→  0% {
+  1373→    transform: scale(1);
+  1374→    opacity: 0.5;
+  1375→  }
+  1376→  50% {
+  1377→    transform: scale(1.08);
+  1378→    opacity: 0.3;
+  1379→  }
+  1380→  100% {
+  1381→    transform: scale(1);
+  1382→    opacity: 0.5;
+  1383→  }
+  1384→}
+  1385→
+  1386→/* ── Mobile Swipe Indicator ── */
+  1387→.swipe-indicator {
+  1388→  display: none;
+  1389→}
+  1390→
+  1391→@media (max-width: 768px) {
+  1392→  .swipe-indicator {
+  1393→    display: flex;
+  1394→    align-items: center;
+  1395→    justify-content: center;
+  1396→    gap: 0.5rem;
+  1397→    color: var(--text-muted);
+  1398→    font-size: 0.75rem;
+  1399→    margin-top: 0.75rem;
+  1400→    animation: swipe-hint 2s ease-in-out infinite;
+  1401→  }
+  1402→}
+  1403→
+  1404→@keyframes swipe-hint {
+  1405→  0%, 100% { opacity: 0.5; transform: translateX(0); }
+  1406→  50% { opacity: 1; transform: translateX(5px); }
+  1407→}
+  1408→
