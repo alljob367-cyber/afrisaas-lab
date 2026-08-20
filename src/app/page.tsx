@@ -2,60 +2,211 @@
 
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
-  Rocket,
-  Store,
-  MessageCircle,
-  Calculator,
-  GraduationCap,
-  Building2,
-  Boxes,
-  Bot,
-  Handshake,
-  Scissors,
+  Search,
   ArrowRight,
   CheckCircle,
   Star,
   Users,
   Zap,
   Shield,
-  Globe,
+  Headphones,
+  ShoppingBag,
+  UtensilsCrossed,
+  GraduationCap,
+  Heart,
+  Building2,
+  Truck,
+  TreePine,
+  Landmark,
+  Hammer,
+  Grid3X3,
+  Eye,
+  Monitor,
+  ShoppingCart,
+  Rocket,
+  MessageSquare,
+  BarChart3,
+  Lightbulb,
+  Cpu,
+  Bot,
   ChevronRight,
-  LogIn,
 } from "lucide-react"
 
-const services = [
-  { icon: <Store className="w-6 h-6" />, name: "MVP Restaurant", desc: "Gestion complète de restaurant", color: "from-orange-500 to-red-500" },
-  { icon: <MessageCircle className="w-6 h-6" />, name: "MVP WhatsApp Business", desc: "Communication professionnelle", color: "from-green-500 to-emerald-500" },
-  { icon: <Calculator className="w-6 h-6" />, name: "MVP Finances", desc: "Gestion financière simplifiée", color: "from-blue-500 to-cyan-500" },
-  { icon: <GraduationCap className="w-6 h-6" />, name: "MVP École", desc: "Administration scolaire", color: "from-purple-500 to-pink-500" },
-  { icon: <Building2 className="w-6 h-6" />, name: "MVP Immobilier", desc: "Gestion immobilière", color: "from-indigo-500 to-purple-500" },
-  { icon: <Boxes className="w-6 h-6" />, name: "MVP Stock", desc: "Gestion des stocks", color: "from-amber-500 to-orange-500" },
-  { icon: <Bot className="w-6 h-6" />, name: "MVP AI Assistant", desc: "Assistant IA intelligent", color: "from-teal-500 to-green-500" },
-  { icon: <Handshake className="w-6 h-6" />, name: "MVP Tontine", desc: "Gestion de tontines", color: "from-pink-500 to-rose-500" },
-  { icon: <Scissors className="w-6 h-6" />, name: "MVP Salon", desc: "Gestion salon de coiffure", color: "from-cyan-500 to-blue-500" },
+// Sector data
+const sectors = [
+  { icon: <ShoppingBag className="w-6 h-6" />, name: "Commerce" },
+  { icon: <UtensilsCrossed className="w-6 h-6" />, name: "Restaurant" },
+  { icon: <GraduationCap className="w-6 h-6" />, name: "Éducation" },
+  { icon: <Heart className="w-6 h-6" />, name: "Santé" },
+  { icon: <Building2 className="w-6 h-6" />, name: "Immobilier" },
+  { icon: <Truck className="w-6 h-6" />, name: "Transport" },
+  { icon: <TreePine className="w-6 h-6" />, name: "Agriculture" },
+  { icon: <Landmark className="w-6 h-6" />, name: "Finance" },
+  { icon: <Hammer className="w-6 h-6" />, name: "Artisanat" },
+  { icon: <Grid3X3 className="w-6 h-6" />, name: "Voir plus" },
 ]
 
+// MVP Products data
+const mvpProducts = [
+  {
+    id: 1,
+    name: "Restaurant Manager",
+    description: "Gérez votre restaurant facilement",
+    category: "Restaurant",
+    price: "199 000 FCFA",
+    image: "/images/landing/mvp-restaurant.png",
+    badge: "Populaire",
+    badgeColor: "bg-green-500",
+  },
+  {
+    id: 2,
+    name: "WhatsApp CRM",
+    description: "CRM intégré à WhatsApp",
+    category: "CRM",
+    price: "149 000 FCFA",
+    image: "/images/landing/mvp-whatsapp.png",
+    badge: "IA",
+    badgeColor: "bg-emerald-500",
+  },
+  {
+    id: 3,
+    name: "École Manager",
+    description: "Gestion complète d'établissements",
+    category: "Éducation",
+    price: "179 000 FCFA",
+    image: "/images/landing/mvp-ecole.png",
+    badge: "Populaire",
+    badgeColor: "bg-green-500",
+  },
+  {
+    id: 4,
+    name: "Immo Pro",
+    description: "Gérez vos biens immobiliers",
+    category: "Immobilier",
+    price: "199 000 FCFA",
+    image: "/images/landing/mvp-immo.png",
+    badge: "Nouveau",
+    badgeColor: "bg-blue-500",
+  },
+  {
+    id: 5,
+    name: "Finances Plus",
+    description: "Comptabilité & gestion financière",
+    category: "Finance",
+    price: "159 000 FCFA",
+    image: "/images/landing/mvp-finances.png",
+    badge: "IA",
+    badgeColor: "bg-emerald-500",
+  },
+]
+
+// Features data
 const features = [
-  { icon: <Zap className="w-5 h-5" />, title: "Déploiement Rapide", desc: "Votre MVP prêt en 48h" },
-  { icon: <Shield className="w-5 h-5" />, title: "Sécurisé", desc: "Données protégées et sauvegardées" },
-  { icon: <Globe className="w-5 h-5" />, title: "Accessible Partout", desc: "Fonctionne sur tous les appareils" },
-  { icon: <Users className="w-5 h-5" />, title: "Support 24/7", desc: "Équipe dédiée à votre succès" },
+  {
+    icon: <Users className="w-8 h-8" />,
+    title: "Solutions prêtes à l'emploi",
+    description: "Des MVP testés et validés pour démarrer rapidement.",
+  },
+  {
+    icon: <Lightbulb className="w-8 h-8" />,
+    title: "Personnalisation",
+    description: "Nous adaptons chaque solution à vos besoins spécifiques.",
+  },
+  {
+    icon: <Cpu className="w-8 h-8" />,
+    title: "Technologies modernes",
+    description: "Des solutions performantes, sécurisées et évolutives.",
+  },
+  {
+    icon: <Shield className="w-8 h-8" />,
+    title: "Paiement sécurisé",
+    description: "Payez en toute sécurité via Channov (mobile money, carte...).",
+  },
+  {
+    icon: <Headphones className="w-8 h-8" />,
+    title: "Support dédié",
+    description: "Une équipe disponible pour vous accompagner.",
+  },
 ]
 
+// How it works steps
+const steps = [
+  {
+    number: "1",
+    icon: <Search className="w-8 h-8" />,
+    title: "Trouvez votre solution",
+    description: "Recherchez votre problème ou parcourez nos catégories.",
+  },
+  {
+    number: "2",
+    icon: <Monitor className="w-8 h-8" />,
+    title: "Découvrez le MVP",
+    description: "Explorez les fonctionnalités, regardez la démo.",
+  },
+  {
+    number: "3",
+    icon: <ShoppingCart className="w-8 h-8" />,
+    title: "Achetez ou demandez un devis",
+    description: "Achetez directement ou demandez une personnalisation.",
+  },
+  {
+    number: "4",
+    icon: <Rocket className="w-8 h-8" />,
+    title: "Utilisez et développez votre activité",
+    description: "Recevez votre solution et faites croître votre business.",
+  },
+]
+
+// AI Lab features
+const aiFeatures = [
+  { icon: <Bot className="w-5 h-5" />, text: "Automatisation intelligente" },
+  { icon: <MessageSquare className="w-5 h-5" />, text: "Chatbots & WhatsApp IA" },
+  { icon: <BarChart3 className="w-5 h-5" />, text: "Analyse prédictive" },
+  { icon: <Zap className="w-5 h-5" />, text: "Intégrations avancées" },
+]
+
+// Testimonials data
 const testimonials = [
-  { name: "Amadou D.", role: "Restaurateur", text: "AfriSaaS a transformé mon entreprise. Gestion simplifiée et efficace!", rating: 5 },
-  { name: "Fatou M.", role: "Commerçante", text: "Le MVP WhatsApp Business a boosté mes ventes de 40%!", rating: 5 },
-  { name: "Kofi A.", role: "Directeur d'école", text: "L'administration scolaire n'a jamais été aussi facile.", rating: 5 },
+  {
+    id: 1,
+    name: "Jean Paul K.",
+    role: "Restaurateur",
+    avatar: "/images/landing/avatar-jean.png",
+    text: "Grâce à AfriSaas Lab, j'ai pu digitaliser mon restaurant en quelques jours. Excellent support !",
+  },
+  {
+    id: 2,
+    name: "Aicha M.",
+    role: "Entrepreneure",
+    avatar: "/images/landing/avatar-aicha.png",
+    text: "Le CRM WhatsApp a transformé ma relation client. Je le recommande fortement.",
+  },
+  {
+    id: 3,
+    name: "Kevin D.",
+    role: "Directeur d'école",
+    avatar: "/images/landing/avatar-kevin.png",
+    text: "Une équipe professionnelle, des solutions fiables et un suivi impeccable.",
+  },
+  {
+    id: 4,
+    name: "Fatou M.",
+    role: "Commerçante",
+    avatar: "/images/landing/avatar-fatou.png",
+    text: "Enfin des solutions adaptées à nos réalités africaines. Bravo à l'équipe !",
+  },
 ]
 
 export default function HomePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -65,149 +216,270 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
-      {/* Background Effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#D4AF37]/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#10B981]/10 rounded-full blur-[100px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[150px]" />
+      {/* Background Pattern */}
+      <div className="fixed inset-0 opacity-5 pointer-events-none">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }} />
       </div>
 
-      {/* Navigation */}
-      <nav className="relative z-50 flex items-center justify-between px-6 lg:px-12 py-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#B8960C] flex items-center justify-center">
-            <Rocket className="w-5 h-5 text-white" />
+      {/* ==================== NAVBAR ==================== */}
+      <nav className="relative z-50 border-b border-gray-800/50 bg-[#0a0a0a]/95 backdrop-blur-sm sticky top-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 md:h-20">
+            {/* Logo */}
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#B8960C] flex items-center justify-center">
+                <Zap className="w-5 h-5 text-black" />
+              </div>
+              <div>
+                <span className="text-xl font-bold tracking-wide">AFRISAAS</span>
+                <span className="block text-xs text-[#10B981] -mt-1">LAB</span>
+              </div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-8">
+              <a href="#accueil" className="text-sm hover:text-[#D4AF37] transition-colors">Accueil</a>
+              <a href="#mvp" className="text-sm hover:text-[#D4AF37] transition-colors">MVP</a>
+              <a href="#secteurs" className="text-sm hover:text-[#D4AF37] transition-colors">Secteurs</a>
+              <a href="#ia" className="text-sm hover:text-[#D4AF37] transition-colors">Solutions IA</a>
+              <a href="#services" className="text-sm hover:text-[#D4AF37] transition-colors">Services</a>
+              <a href="#tarifs" className="text-sm hover:text-[#D4AF37] transition-colors">Tarifs</a>
+              <a href="#apropos" className="text-sm hover:text-[#D4AF37] transition-colors">À propos</a>
+            </div>
+
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-3">
+              {status === "authenticated" ? (
+                <Button 
+                  onClick={() => router.push("/dashboard")}
+                  variant="outline" 
+                  className="border-gray-700 text-white hover:bg-white/5"
+                >
+                  Mon Tableau de Bord
+                </Button>
+              ) : (
+                <>
+                  <Button 
+                    onClick={() => router.push("/login")}
+                    variant="ghost" 
+                    className="text-white hover:bg-white/5 hidden sm:flex"
+                  >
+                    Se connecter
+                  </Button>
+                  <Button 
+                    onClick={() => router.push("/login")}
+                    className="bg-gradient-to-r from-[#D4AF37] to-[#B8960C] hover:from-[#B8960C] hover:to-[#D4AF37] text-black font-semibold"
+                  >
+                    S'inscrire
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
-          <span className="text-xl font-bold text-[#D4AF37]">AfriSaaS</span>
-        </div>
-
-        <div className="hidden md:flex items-center gap-8">
-          <a href="#services" className="text-gray-300 hover:text-white transition-colors">Services</a>
-          <a href="#features" className="text-gray-300 hover:text-white transition-colors">Fonctionnalités</a>
-          <a href="#testimonials" className="text-gray-300 hover:text-white transition-colors">Témoignages</a>
-          <a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Tarifs</a>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {status === "authenticated" ? (
-            <Button 
-              onClick={() => router.push("/dashboard")}
-              className="bg-gradient-to-r from-[#D4AF37] to-[#B8960C] hover:from-[#B8960C] hover:to-[#D4AF37] text-white font-semibold"
-            >
-              Mon Tableau de Bord
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          ) : (
-            <>
-              <Button 
-                variant="ghost" 
-                onClick={() => router.push("/login")}
-                className="text-gray-300 hover:text-white"
-              >
-                Connexion
-              </Button>
-              <Button 
-                onClick={() => router.push("/login")}
-                className="bg-gradient-to-r from-[#D4AF37] to-[#B8960C] hover:from-[#B8960C] hover:to-[#D4AF37] text-white font-semibold"
-              >
-                Commencer
-                <ArrowRight className="w-4 h-2 ml-2" />
-              </Button>
-            </>
-          )}
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative z-10 px-6 lg:px-12 pt-20 pb-32">
-        <div className="max-w-7xl mx-auto text-center">
-          <Badge className="mb-6 bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/30 px-4 py-1.5">
-            <Star className="w-3 h-3 mr-2 fill-current" />
-            La #1 Plateforme SaaS Panafricaine
-          </Badge>
+      {/* ==================== HERO SECTION ==================== */}
+      <section id="accueil" className="relative pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#D4AF37]/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#10B981]/10 rounded-full blur-[120px]" />
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-            Transformez Votre Entreprise
-            <br />
-            <span className="bg-gradient-to-r from-[#D4AF37] via-[#F5D76E] to-[#D4AF37] bg-clip-text text-transparent">
-              Avec Des Solutions Digitales
-            </span>
-          </h1>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-8 z-10">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                UN PROBLÈME.<br />
+                <span className="text-[#D4AF37]">UNE SOLUTION.</span><br />
+                UN <span className="text-[#D4AF37]">MVP</span>.
+              </h1>
 
-          <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10">
-            AfriSaaS offre des solutions SaaS adaptées aux réalités africaines. 
-            Des outils puissants pour gérer, croître et digitaliser votre entreprise.
-          </p>
+              <p className="text-lg text-gray-300 max-w-xl">
+                Découvrez des solutions digitales prêtes à tester, acheter ou personnaliser pour développer votre activité.
+              </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button 
-              size="lg" 
-              onClick={() => router.push("/login")}
-              className="bg-gradient-to-r from-[#D4AF37] to-[#B8960C] hover:from-[#B8960C] hover:to-[#D4AF37] text-white px-8 py-6 text-lg font-semibold shadow-lg shadow-[#D4AF37]/25"
-            >
-              <Rocket className="w-5 h-5 mr-2" />
-              Démarrer Gratuitement
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-gray-700 text-white hover:bg-white/5 px-8 py-6 text-lg"
-            >
-              Voir la Démo
-              <ChevronRight className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
+              {/* Search Bar */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Input
+                    type="text"
+                    placeholder="Ex: Je veux gérer mon restaurant, mes clients, mes ventes..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 pr-4 py-4 bg-white/10 border-gray-700 rounded-lg text-white placeholder:text-gray-500 focus:border-[#D4AF37]"
+                  />
+                </div>
+                <Button className="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 font-semibold whitespace-nowrap">
+                  Rechercher <Search className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto mt-16 pt-16 border-t border-gray-800">
-            <div>
-              <p className="text-3xl md:text-4xl font-bold text-[#D4AF37]">500+</p>
-              <p className="text-sm text-gray-500 mt-1">Entreprises</p>
+              {/* Popular Searches */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm text-gray-500">Recherches populaires :</span>
+                {["Restaurant", "CRM", "WhatsApp", "École", "Immobilier", "Commerce"].map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => setSearchQuery(tag)}
+                    className="text-sm px-3 py-1 rounded-full border border-gray-700 hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-gray-800">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-[#D4AF37]/10 flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-[#D4AF37]" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-[#D4AF37]">+50</p>
+                    <p className="text-xs text-gray-500">MVP disponibles</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-[#10B981]/10 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-[#10B981]" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-[#10B981]">+300</p>
+                    <p className="text-xs text-gray-500">Entrepreneurs équipés</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
+                    <Grid3X3 className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-blue-500">+15</p>
+                    <p className="text-xs text-gray-500">Secteurs couverts</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-purple-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-purple-500">+98%</p>
+                    <p className="text-xs text-gray-500">Clients satisfaits</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-3xl md:text-4xl font-bold text-[#10B981]">15+</p>
-              <p className="text-sm text-gray-500 mt-1">Pays Africains</p>
-            </div>
-            <div>
-              <p className="text-3xl md:text-4xl font-bold text-purple-400">99.9%</p>
-              <p className="text-sm text-gray-500 mt-1">Disponibilité</p>
+
+            {/* Right Image */}
+            <div className="relative hidden lg:block">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-[#10B981]/20 rounded-3xl blur-3xl" />
+                <img
+                  src="/images/landing/hero-woman.png"
+                  alt="AfriSaas - Femme d'affaires africaine"
+                  className="relative rounded-3xl w-full max-w-md mx-auto object-cover"
+                />
+                {/* Decorative Elements */}
+                <div className="absolute -top-4 -right-4 w-24 h-24 border-2 border-[#D4AF37]/30 rounded-full" />
+                <div className="absolute -bottom-4 -left-4 w-32 h-32 border-2 border-[#10B981]/30 rounded-full" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="relative z-10 px-6 lg:px-12 py-24 bg-gradient-to-b from-transparent via-[#0a0a0a] to-[#0d0d1a]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#10B981]/10 text-[#10B981] border-[#10B981]/30">
-              Nos Services
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Des Solutions Pour Chaque <span className="text-[#D4AF37]">Besoin</span>
-            </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Découvrez notre catalogue de solutions SaaS conçues spécialement pour le marché africain
-            </p>
+      {/* ==================== SECTORS SECTION ==================== */}
+      <section id="secteurs" className="py-16 border-t border-gray-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+              <h2 className="text-lg font-semibold text-[#D4AF37] tracking-wider uppercase">
+                Trouvez une Solution par Secteur
+              </h2>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
-              <Card 
-                key={index} 
-                className="group bg-gray-900/50 border-gray-800 hover:border-[#D4AF37]/50 transition-all duration-300 hover:-translate-y-1"
+          {/* Sectors Grid */}
+          <div className="grid grid-cols-5 md:grid-cols-10 gap-4">
+            {sectors.map((sector, index) => (
+              <button
+                key={index}
+                className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-[#D4AF37]/50 hover:bg-gray-900 transition-all"
               >
-                <CardContent className="p-6">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform`}>
-                    {service.icon}
+                <div className="w-12 h-12 rounded-full bg-gray-800 group-hover:bg-[#D4AF37]/10 flex items-center justify-center text-gray-400 group-hover:text-[#D4AF37] transition-colors">
+                  {sector.icon}
+                </div>
+                <span className="text-xs text-gray-400 group-hover:text-white transition-colors text-center">
+                  {sector.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== MVP POPULAIRES SECTION ==================== */}
+      <section id="mvp" className="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#0d0d1a]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+              <h2 className="text-2xl font-bold">MVP Populaires</h2>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            </div>
+            <a href="#" className="text-[#10B981] hover:text-[#059669] text-sm flex items-center gap-1">
+              Voir tous les MVP <ChevronRight className="w-4 h-4" />
+            </a>
+          </div>
+
+          {/* MVP Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            {mvpProducts.map((product) => (
+              <Card key={product.id} className="group bg-gray-900/80 border-gray-800 hover:border-[#D4AF37]/50 overflow-hidden transition-all duration-300">
+                {/* Product Image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <Badge className={`absolute top-3 left-3 ${product.badgeColor} text-white text-xs`}>
+                    {product.badge}
+                  </Badge>
+                </div>
+
+                {/* Product Info */}
+                <CardContent className="p-4 space-y-3">
+                  <div>
+                    <h3 className="font-bold text-white group-hover:text-[#D4AF37] transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-xs text-gray-500">{product.description}</p>
+                    <p className="text-xs text-[#10B981] mt-1">{product.category}</p>
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 group-hover:text-[#D4AF37] transition-colors">
-                    {service.name}
-                  </h3>
-                  <p className="text-gray-400 text-sm">{service.desc}</p>
-                  <Button variant="link" className="p-0 mt-4 text-[#D4AF37] hover:text-[#F5D76E]">
-                    En savoir plus <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
+
+                  <div className="pt-2 border-t border-gray-800">
+                    <p className="text-lg font-bold text-[#D4AF37]">{product.price}</p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" className="flex-1 border-gray-700 text-white hover:bg-white/5 text-xs">
+                      Voir
+                    </Button>
+                    <Button size="sm" variant="outline" className="flex-1 border-gray-700 text-white hover:bg-white/5 text-xs">
+                      Démo
+                    </Button>
+                    <Button size="sm" className="flex-1 bg-[#D4AF37] hover:bg-[#B8960C] text-black text-xs font-semibold">
+                      Acheter
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -215,200 +487,278 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="relative z-10 px-6 lg:px-12 py-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <Badge className="mb-4 bg-purple-500/10 text-purple-400 border-purple-500/30">
-                Pourquoi Nous Choisir
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Une Plateforme Conçue Pour <span className="text-[#D4AF37]">L'Afrique</span>
+      {/* ==================== POURQUOI CHOISIR SECTION ==================== */}
+      <section id="services" className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+              <h2 className="text-2xl font-bold">Pourquoi Choisir AfriSaas Lab ?</h2>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            </div>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {features.slice(0, 5).map((feature, index) => (
+              <div
+                key={index}
+                className="group p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-[#10B981]/50 text-center transition-all"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-[#10B981]/10 flex items-center justify-center mx-auto mb-4 text-[#10B981] group-hover:scale-110 transition-transform">
+                  {feature.icon}
+                </div>
+                <h3 className="font-bold mb-2 group-hover:text-[#10B981] transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-gray-500">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== COMMENT ÇA MARCHE SECTION ==================== */}
+      <section className="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#0d0d1a]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+              <h2 className="text-2xl font-bold">Comment ça Marche ?</h2>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            </div>
+          </div>
+
+          {/* Steps */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {steps.map((step, index) => (
+              <div key={index} className="relative text-center group">
+                {/* Step Number Circle */}
+                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#10B981] text-black font-bold text-xl mb-6 group-hover:scale-110 transition-transform">
+                  {step.number}
+                </div>
+
+                {/* Icon */}
+                <div className="w-14 h-14 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center mx-auto mb-4 text-[#D4AF37]">
+                  {step.icon}
+                </div>
+
+                {/* Content */}
+                <h3 className="font-bold mb-2">{step.title}</h3>
+                <p className="text-sm text-gray-500">{step.description}</p>
+
+                {/* Connector Line (except last) */}
+                {index < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-8 left-[60%] w-[80%] h-px bg-gradient-to-r from-[#10B981] to-transparent" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== AI LAB SECTION ==================== */}
+      <section id="ia" className="py-20 relative overflow-hidden">
+        {/* Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0d1f17] to-[#0a0a0a]" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30">
+                <Bot className="w-4 h-4 text-purple-400" />
+                <span className="text-sm text-purple-400 font-medium">AFRISAAS AI LAB</span>
+              </div>
+
+              <h2 className="text-3xl md:text-4xl font-bold">
+                L'IA AU SERVICE DE<br />
+                <span className="text-[#D4AF37]">VOTRE CROISSANCE</span>
               </h2>
-              <p className="text-gray-400 mb-8">
-                Contrairement aux solutions occidentales, AfriSaaS comprend les défis uniques 
-                des entreprises africaines et y apporte des réponses concrètes.
+
+              <p className="text-gray-400">
+                Des solutions intelligentes pour automatiser, analyser et faire passer votre entreprise au niveau supérieur.
               </p>
 
-              <div className="space-y-4">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 hover:bg-gray-900 transition-colors">
-                    <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] flex-shrink-0">
+              <Button className="bg-[#D4AF37] hover:bg-[#B8960C] text-black font-semibold">
+                Découvrir nos solutions IA
+              </Button>
+
+              {/* AI Features List */}
+              <div className="space-y-4 pt-4">
+                {aiFeatures.map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37]">
                       {feature.icon}
                     </div>
-                    <div>
-                      <h3 className="font-semibold">{feature.title}</h3>
-                      <p className="text-sm text-gray-400">{feature.desc}</p>
-                    </div>
+                    <span className="text-gray-300">{feature.text}</span>
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* Right Image */}
             <div className="relative">
-              <div className="aspect-square rounded-3xl bg-gradient-to-br from-[#D4AF37]/20 to-[#10B981]/20 p-1">
-                <div className="w-full h-full rounded-3xl bg-[#0a0a0a] flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#B8960C] flex items-center justify-center mx-auto mb-6">
-                      <Rocket className="w-12 h-12 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">Prêt à Démarrer?</h3>
-                    <p className="text-gray-400 mb-6">Rejoignez 500+ entreprises qui font confiance à AfriSaaS</p>
-                    <Button 
-                      size="lg"
-                      onClick={() => router.push("/login")}
-                      className="bg-gradient-to-r from-[#D4AF37] to-[#B8960C] hover:from-[#B8960C] hover:to-[#D4AF37] text-white"
-                    >
-                      <LogIn className="w-5 h-5 mr-2" />
-                      Créer Mon Compte
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Floating elements */}
-              <div className="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                ✓ Actif maintenant
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-[#D4AF37] text-black px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                ★ 4.9/5 avis
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-[#10B981]/20 rounded-3xl blur-3xl" />
+              <img
+                src="/images/landing/ai-robot.png"
+                alt="AI Robot - AfriSaas Lab"
+                className="relative rounded-3xl w-full max-w-lg mx-auto"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section id="testimonials" className="relative z-10 px-6 lg:px-12 py-24 bg-gradient-to-b from-[#0a0a0a] to-[#0d0d1a]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/30">
-              Témoignages
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ce Que Disent <span className="text-[#D4AF37]">Nos Clients</span>
-            </h2>
+      {/* ==================== TESTIMONIALS SECTION ==================== */}
+      <section className="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#0d0d1a]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+              <h2 className="text-2xl font-bold">Ils Nous Font Confiance</h2>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-gray-900/50 border-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-[#D4AF37] fill-current" />
-                    ))}
+          {/* Testimonials Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {testimonials.map((testimonial) => (
+              <Card key={testimonial.id} className="bg-gray-900/50 border-gray-800 p-6 hover:border-[#D4AF37]/30 transition-all">
+                <div className="flex items-center gap-4 mb-4">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-14 h-14 rounded-full object-cover border-2 border-[#D4AF37]/30"
+                  />
+                  <div>
+                    <p className="font-bold">{testimonial.name}</p>
+                    <p className="text-xs text-gray-500">{testimonial.role}</p>
                   </div>
-                  <p className="text-gray-300 mb-6 italic">&quot;{testimonial.text}&quot;</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B8960C] flex items-center justify-center text-black font-bold">
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-semibold">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
-                    </div>
-                  </div>
-                </CardContent>
+                </div>
+                <p className="text-sm text-gray-400 italic">&ldquo;{testimonial.text}&rdquo;</p>
+                
+                {/* Stars */}
+                <div className="flex gap-1 mt-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-[#D4AF37] fill-current" />
+                  ))}
+                </div>
               </Card>
             ))}
           </div>
+
+          {/* Pagination Dots */}
+          <div className="flex justify-center gap-2 mt-8">
+            <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+            <div className="w-2 h-2 rounded-full bg-gray-700" />
+            <div className="w-2 h-2 rounded-full bg-gray-700" />
+            <div className="w-2 h-2 rounded-full bg-gray-700" />
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section id="pricing" className="relative z-10 px-6 lg:px-12 py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-[#D4AF37]/10 to-[#10B981]/10 rounded-3xl p-12 border border-[#D4AF37]/20">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Prêt à Transformer Votre Entreprise?
-            </h2>
-            <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-              Rejoignez la révolution digitale africaine. Commencez gratuitement et 
-              évoluez selon vos besoins.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-              <Button 
-                size="lg"
-                onClick={() => router.push("/login")}
-                className="bg-gradient-to-r from-[#D4AF37] to-[#B8960C] hover:from-[#B8960C] hover:to-[#D4AF37] text-white px-8 py-6 text-lg font-semibold"
-              >
-                <Rocket className="w-5 h-5 mr-2" />
-                Commencer Maintenant
-              </Button>
-            </div>
+      {/* ==================== CTA FOOTER SECTION ==================== */}
+      <section id="tarifs" className="py-20 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
 
-            <div className="flex items-center justify-center gap-6 text-sm text-gray-400">
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#10B981]" />
-                Essai gratuit
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#10B981]" />
-                Sans carte bancaire
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#10B981]" />
-                Annulation facile
-              </span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="bg-gradient-to-r from-gray-900/90 to-gray-800/90 rounded-3xl p-8 md:p-12 border border-gray-700/50">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                  PRÊT À TRANSFORMER VOTRE IDÉE<br />
+                  EN <span className="text-[#D4AF37]">SUCCÈS ?</span>
+                </h2>
+                <p className="text-gray-400">
+                  Rejoignez des centaines d'entrepreneurs qui nous font déjà confiance.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-end">
+                <Button 
+                  onClick={() => router.push("/login")}
+                  className="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 font-semibold"
+                >
+                  Parcourir les MVP
+                </Button>
+                <Button 
+                  onClick={() => router.push("/login")}
+                  className="bg-[#D4AF37] hover:bg-[#B8960C] text-black px-8 py-4 font-semibold"
+                >
+                  Demander un devis
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-gray-800 px-6 lg:px-12 py-12">
-        <div className="max-w-7xl mx-auto">
+      {/* ==================== FOOTER ==================== */}
+      <footer id="apropos" className="border-t border-gray-800 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
+            {/* Logo & Description */}
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#B8960C] flex items-center justify-center">
-                  <Rocket className="w-4 h-4 text-white" />
+                  <Zap className="w-4 h-4 text-black" />
                 </div>
-                <span className="font-bold text-[#D4AF37]">AfriSaaS</span>
+                <span className="font-bold text-[#D4AF37]">AfriSaas Lab</span>
               </div>
               <p className="text-sm text-gray-500">
                 La plateforme SaaS panafricaine pour les entreprises modernes.
               </p>
             </div>
             
+            {/* Products */}
             <div>
               <h4 className="font-semibold mb-4">Produits</h4>
               <ul className="space-y-2 text-sm text-gray-500">
-                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">MVP Restaurant</a></li>
-                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">MVP Finance</a></li>
-                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Tous les services</a></li>
+                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Restaurant Manager</a></li>
+                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">WhatsApp CRM</a></li>
+                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">École Manager</a></li>
+                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Tous les MVP</a></li>
               </ul>
             </div>
             
+            {/* Company */}
             <div>
               <h4 className="font-semibold mb-4">Entreprise</h4>
               <ul className="space-y-2 text-sm text-gray-500">
                 <li><a href="#" className="hover:text-[#D4AF37] transition-colors">À propos</a></li>
                 <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Blog</a></li>
                 <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Carrières</a></li>
+                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Contact</a></li>
               </ul>
             </div>
             
+            {/* Support */}
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-gray-500">
                 <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Centre d'aide</a></li>
-                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Statut</a></li>
+                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Statut du service</a></li>
               </ul>
             </div>
           </div>
           
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-500">
-              © 2024 AfriSaaS. Tous droits réservés.
+              © 2024 AfriSaas Lab. Tous droits réservés.
             </p>
             <div className="flex items-center gap-6 text-sm text-gray-500">
               <a href="#" className="hover:text-[#D4AF37] transition-colors">Confidentialité</a>
-              <a href="#" className="hover:text-[#D4AF37] transition-colors">Conditions</a>
+              <a href="#" className="hover:text-[#D4AF37] transition-colors">Conditions d'utilisation</a>
             </div>
           </div>
         </div>
