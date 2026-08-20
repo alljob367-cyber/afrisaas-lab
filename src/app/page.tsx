@@ -60,7 +60,7 @@ const mvpProducts = [
     description: "Gérez votre restaurant facilement",
     category: "Restaurant",
     price: "199 000 FCFA",
-    image: "/images/landing/mvp-restaurant.png",
+    image: "/images/landing/mvp-restaurant.jpg",
     badge: "Populaire",
     badgeColor: "bg-green-500",
     link: "/mvp/restaurant-manager",
@@ -72,7 +72,7 @@ const mvpProducts = [
     description: "CRM intégré à WhatsApp",
     category: "CRM",
     price: "149 000 FCFA",
-    image: "/images/landing/mvp-whatsapp.png",
+    image: "/images/landing/mvp-whatsapp.jpg",
     badge: "IA",
     badgeColor: "bg-emerald-500",
     link: "/mvp/whatsapp-crm",
@@ -84,7 +84,7 @@ const mvpProducts = [
     description: "Gestion complète d'établissements",
     category: "Éducation",
     price: "179 000 FCFA",
-    image: "/images/landing/mvp-ecole.png",
+    image: "/images/landing/mvp-ecole.jpg",
     badge: "Populaire",
     badgeColor: "bg-green-500",
     link: "#",
@@ -96,7 +96,7 @@ const mvpProducts = [
     description: "Gérez vos biens immobiliers",
     category: "Immobilier",
     price: "199 000 FCFA",
-    image: "/images/landing/mvp-immo.png",
+    image: "/images/landing/mvp-immo.jpg",
     badge: "Nouveau",
     badgeColor: "bg-blue-500",
     link: "#",
@@ -108,7 +108,7 @@ const mvpProducts = [
     description: "Comptabilité & gestion financière",
     category: "Finance",
     price: "159 000 FCFA",
-    image: "/images/landing/mvp-finances.png",
+    image: "/images/landing/mvp-finances.jpg",
     badge: "IA",
     badgeColor: "bg-emerald-500",
     link: "#",
@@ -187,28 +187,28 @@ const testimonials = [
     id: 1,
     name: "Jean Paul K.",
     role: "Restaurateur",
-    avatar: "/images/landing/avatar-jean.png",
+    avatar: "/images/landing/avatar-jean.jpg",
     text: "Grâce à AfriSaas Lab, j'ai pu digitaliser mon restaurant en quelques jours. Excellent support !",
   },
   {
     id: 2,
     name: "Aicha M.",
     role: "Entrepreneure",
-    avatar: "/images/landing/avatar-aicha.png",
+    avatar: "/images/landing/avatar-aicha.jpg",
     text: "Le CRM WhatsApp a transformé ma relation client. Je le recommande fortement.",
   },
   {
     id: 3,
     name: "Kevin D.",
     role: "Directeur d'école",
-    avatar: "/images/landing/avatar-kevin.png",
+    avatar: "/images/landing/avatar-kevin.jpg",
     text: "Une équipe professionnelle, des solutions fiables et un suivi impeccable.",
   },
   {
     id: 4,
     name: "Fatou M.",
     role: "Commerçante",
-    avatar: "/images/landing/avatar-fatou.png",
+    avatar: "/images/landing/avatar-fatou.jpg",
     text: "Enfin des solutions adaptées à nos réalités africaines. Bravo à l'équipe !",
   },
 ]
@@ -388,7 +388,7 @@ export default function HomePage() {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-[#10B981]/20 rounded-3xl blur-3xl" />
                 <img
-                  src="/images/landing/hero-woman.png"
+                  src="/images/landing/hero-woman.jpg"
                   alt="AfriSaas - Femme d'affaires africaine"
                   className="relative rounded-3xl w-full max-w-md mx-auto object-cover"
                 />
@@ -658,7 +658,7 @@ export default function HomePage() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-[#10B981]/20 rounded-3xl blur-3xl" />
               <img
-                src="/images/landing/ai-robot.png"
+                src="/images/landing/ai-robot.jpg"
                 alt="AI Robot - AfriSaas Lab"
                 className="relative rounded-3xl w-full max-w-lg mx-auto"
               />

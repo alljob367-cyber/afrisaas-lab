@@ -81,7 +81,7 @@ const sampleOrders: Order[] = [
   {
     id: '1',
     product: 'MVP Restaurant',
-    image: '/images/mvp-restaurant.png',
+    image: '/images/mvp-restaurant.jpg',
     status: 'active',
     price: '25 000 FCFA/mois',
     renewalDate: '2024-02-15',
@@ -89,7 +89,7 @@ const sampleOrders: Order[] = [
   {
     id: '2',
     product: 'MVP WhatsApp Business',
-    image: '/images/mvp-whatsapp.png',
+    image: '/images/mvp-whatsapp.jpg',
     status: 'active',
     price: '15 000 FCFA/mois',
     renewalDate: '2024-02-10',
@@ -97,7 +97,7 @@ const sampleOrders: Order[] = [
   {
     id: '3',
     product: 'MVP Finances',
-    image: '/images/mvp-finances.png',
+    image: '/images/mvp-finances.jpg',
     status: 'pending',
     price: '20 000 FCFA/mois',
     renewalDate: '2024-02-20',
