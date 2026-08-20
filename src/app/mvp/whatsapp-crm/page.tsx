@@ -107,9 +107,9 @@ const sampleContacts: Contact[] = [
 const sampleMessages: Message[] = [
   { id: '1', contactId: '1', content: 'Bonjour !', type: 'text', sentBy: 'them', timestamp: new Date(Date.now() - 600000), status: 'read' },
   { id: '2', contactId: '1', content: 'Bonjour Marie ! Comment puis-je vous aider ?', type: 'text', sentBy: 'me', timestamp: new Date(Date.now() - 540000), status: 'read' },
-  { id: '3', contactId: '1', content: 'Je voudrais réserver une table pour ce soir', type: 'text', sentBy: 'them', timestamp: new Date(Date.now()) - 300000, status: 'delivered' },
-  { id: '4', contactId: '1', content: 'Bien sûr ! Pour combien de personnes et à quelle heure ?', type: 'text', sentBy: 'me', timestamp: new Date(Date.now()) - 240000, status: 'sent' },
-  { id: '5', contactId: '1', content: 'Bonjour, je voudrais réserver une table pour ce soir', type: 'text', sentBy: 'them', timestamp: new Date(Date.now()) - 60000, status: 'delivered' },
+  { id: '3', contactId: '1', content: 'Je voudrais réserver une table pour ce soir', type: 'text', sentBy: 'them', timestamp: new Date(Date.now() - 300000), status: 'delivered' },
+  { id: '4', contactId: '1', content: 'Bien sûr ! Pour combien de personnes et à quelle heure ?', type: 'text', sentBy: 'me', timestamp: new Date(Date.now() - 240000), status: 'sent' },
+  { id: '5', contactId: '1', content: 'Bonjour, je voudrais réserver une table pour ce soir', type: 'text', sentBy: 'them', timestamp: new Date(Date.now() - 60000), status: 'delivered' },
 ]
 
 export default function WhatsAppCrmPage() {
