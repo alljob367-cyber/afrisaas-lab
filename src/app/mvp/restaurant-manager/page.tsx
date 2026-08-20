@@ -471,7 +471,7 @@ export default function RestaurantManagerPage() {
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-semibold">{item.name}</h3>
                     <Badge variant={item.available ? "default" : "secondary"} className={item.available ? "bg-green-100 text-green-800" : ""}>
-                      {item.available ? 'Disponible' 'Indisponible'}
+                      {item.available ? 'Disponible' : 'Indisponible'}
                     </Badge>
                   </div>
                   <p className="text-sm text-gray-500 mb-3 line-clamp-2">{item.description}</p>
