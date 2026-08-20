@@ -63,6 +63,8 @@ const mvpProducts = [
     image: "/images/landing/mvp-restaurant.png",
     badge: "Populaire",
     badgeColor: "bg-green-500",
+    link: "/mvp/restaurant-manager",
+    available: true,
   },
   {
     id: 2,
@@ -73,6 +75,8 @@ const mvpProducts = [
     image: "/images/landing/mvp-whatsapp.png",
     badge: "IA",
     badgeColor: "bg-emerald-500",
+    link: "/mvp/whatsapp-crm",
+    available: true,
   },
   {
     id: 3,
@@ -83,6 +87,8 @@ const mvpProducts = [
     image: "/images/landing/mvp-ecole.png",
     badge: "Populaire",
     badgeColor: "bg-green-500",
+    link: "#",
+    available: false,
   },
   {
     id: 4,
@@ -93,6 +99,8 @@ const mvpProducts = [
     image: "/images/landing/mvp-immo.png",
     badge: "Nouveau",
     badgeColor: "bg-blue-500",
+    link: "#",
+    available: false,
   },
   {
     id: 5,
@@ -103,6 +111,8 @@ const mvpProducts = [
     image: "/images/landing/mvp-finances.png",
     badge: "IA",
     badgeColor: "bg-emerald-500",
+    link: "#",
+    available: false,
   },
 ]
 
@@ -442,7 +452,13 @@ export default function HomePage() {
           {/* MVP Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {mvpProducts.map((product) => (
-              <Card key={product.id} className="group bg-gray-900/80 border-gray-800 hover:border-[#D4AF37]/50 overflow-hidden transition-all duration-300">
+              <Card 
+                key={product.id} 
+                className={`group bg-gray-900/80 border-gray-800 hover:border-[#D4AF37]/50 overflow-hidden transition-all duration-300 ${
+                  product.available ? 'cursor-pointer' : 'opacity-70'
+                }`}
+                onClick={() => product.available && product.link !== '#' && router.push(product.link)}
+              >
                 {/* Product Image */}
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
@@ -453,6 +469,20 @@ export default function HomePage() {
                   <Badge className={`absolute top-3 left-3 ${product.badgeColor} text-white text-xs`}>
                     {product.badge}
                   </Badge>
+                  {product.available && (
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="bg-[#D4AF37] text-black px-4 py-2 rounded-lg font-semibold text-sm">
+                        Essayer le MVP →
+                      </span>
+                    </div>
+                  )}
+                  {!product.available && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <span className="text-white px-4 py-2 rounded-lg font-semibold text-sm bg-gray-800">
+                        Bientôt disponible
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Product Info */}
@@ -460,25 +490,50 @@ export default function HomePage() {
                   <div>
                     <h3 className="font-bold text-white group-hover:text-[#D4AF37] transition-colors">
                       {product.name}
+                      {product.available && (
+                        <span className="ml-2 text-xs text-green-400">● Opérationnel</span>
+                      )}
                     </h3>
                     <p className="text-xs text-gray-500">{product.description}</p>
                     <p className="text-xs text-[#10B981] mt-1">{product.category}</p>
                   </div>
 
                   <div className="pt-2 border-t border-gray-800">
-                    <p className="text-lg font-bold text-[#D4AF37]">{product.price}</p>
+                    <p className="text-lg font-bold text-[#D4AF37]">{product.price}<span className="text-xs text-gray-500 font-normal">/mois</span></p>
                   </div>
 
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="flex-1 border-gray-700 text-white hover:bg-white/5 text-xs">
-                      Voir
-                    </Button>
-                    <Button size="sm" variant="outline" className="flex-1 border-gray-700 text-white hover:bg-white/5 text-xs">
-                      Démo
-                    </Button>
-                    <Button size="sm" className="flex-1 bg-[#D4AF37] hover:bg-[#B8960C] text-black text-xs font-semibold">
-                      Acheter
-                    </Button>
+                    {product.available ? (
+                      <>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="flex-1 border-gray-700 text-white hover:bg-white/5 text-xs"
+                          onClick={(e) => { e.stopPropagation(); router.push(product.link) }}
+                        >
+                          Voir
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          className="flex-1 bg-[#D4AF37] hover:bg-[#B8960C] text-black text-xs font-semibold"
+                          onClick={(e) => { e.stopPropagation(); router.push(product.link) }}
+                        >
+                          Essayer
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button size="sm" variant="outline" className="flex-1 border-gray-700 text-white hover:bg-white/5 text-xs" disabled>
+                          Voir
+                        </Button>
+                        <Button size="sm" variant="outline" className="flex-1 border-gray-700 text-white hover:bg-white/5 text-xs" disabled>
+                          Démo
+                        </Button>
+                        <Button size="sm" className="flex-1 bg-gray-700 text-gray-400 text-xs font-semibold" disabled>
+                          Bientôt
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>
